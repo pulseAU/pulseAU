@@ -139,6 +139,41 @@
     /* TOAST */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:1000;pointer-events:none}
     .toast.show{transform:translateX(-50%) translateY(0)}
+  
+    /* ── EVENTS STRIP ── */
+    .events-strip-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);margin-bottom:8px}
+    .events-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:18px}
+    .events-strip::-webkit-scrollbar{display:none}
+    .event-card{flex-shrink:0;background:var(--navy);border-radius:8px;padding:12px 15px;min-width:165px;max-width:195px}
+    .event-card.urgent{background:#7c1d1d}
+    .event-card.soon{background:#78350f}
+    .event-days{font-family:'Playfair Display',serif;font-size:30px;font-weight:600;color:var(--gold);line-height:1}
+    .event-days.tbc{font-size:15px;padding-top:6px}
+    .event-label{font-size:12px;font-weight:600;color:white;margin-top:4px;line-height:1.3}
+    .event-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px}
+    .event-badge{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);padding:2px 6px;border-radius:3px;margin-bottom:5px}
+    /* ── QUICK VOTE ── */
+    .quick-vote-card{background:var(--bg-card);border:2px solid var(--navy);border-radius:8px;padding:16px 18px;margin-bottom:20px}
+    .quick-vote-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:white;background:var(--navy);padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:10px}
+    .quick-vote-q{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.35}
+    .quick-vote-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    @media(max-width:500px){.quick-vote-opts{grid-template-columns:1fr}}
+    .qv-opt{position:relative;border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .15s;user-select:none}
+    .qv-opt:hover:not(.qv-voted){border-color:var(--navy)}
+    .qv-opt.qv-selected{border-color:var(--navy);border-width:2px}
+    .qv-opt.qv-winner{border-color:var(--gold)}
+    .qv-bar{position:absolute;top:0;left:0;height:100%;background:#f0ece4;transition:width .5s;z-index:0}
+    .qv-opt.qv-winner .qv-bar{background:#fef3c7}
+    .qv-opt.qv-selected .qv-bar{background:#e8eef8}
+    .qv-row{position:relative;z-index:1;padding:9px 12px;display:flex;justify-content:space-between;align-items:center}
+    .qv-text{font-size:13px;color:var(--text)}
+    .qv-check{font-size:11px;color:var(--navy);font-weight:600;margin-right:3px}
+    .qv-pct{font-size:12px;font-weight:600;color:var(--text-muted)}
+    .quick-vote-footer{font-size:11px;color:var(--text-light);margin-top:10px}
+    /* ── HERO STORY ── */
+    .news-card.hero-card .card-img-wrap{height:300px}
+    .news-card.hero-card .card-headline{font-size:24px}
+    .news-card.hero-card .card-summary{font-size:14px}
   </style>
 </head>
 <body>
@@ -171,12 +206,16 @@
 
 <div class="container">
   <main>
-    <div class="budget-banner">
-      <div class="budget-countdown" id="budget-days">—</div>
-      <div>
-        <div class="budget-text-head">Days until Federal Budget 2026</div>
-        <div class="budget-text-sub">Treasurer Jim Chalmers hands down the budget on 12 May 2026</div>
-      </div>
+    <!-- POLITICAL EVENTS STRIP -->
+    <div class="events-strip-label">Upcoming political events</div>
+    <div class="events-strip" id="events-strip"></div>
+
+    <!-- FEATURED QUICK VOTE -->
+    <div class="quick-vote-card">
+      <div class="quick-vote-label">Quick vote</div>
+      <div class="quick-vote-q" id="qv-question">Who is best placed to manage Australia's cost-of-living crisis?</div>
+      <div class="quick-vote-opts" id="qv-opts"></div>
+      <div class="quick-vote-footer"><span id="qv-total"></span></div>
     </div>
     <div class="section-head">
       <div class="section-title">Today's Stories</div>
@@ -428,7 +467,12 @@ function renderFeed(){
   const stories=currentFilter==='all'?allStories:allStories.filter(s=>s.category===currentFilter);
   document.getElementById('story-count').textContent=stories.length+' stories';
   const feed=document.getElementById('news-feed');
-  feed.innerHTML=stories.length===0?`<div class="loading-card"><div style="font-size:14px;color:var(--text-muted)">No stories found for this topic.</div></div>`:stories.map(renderCard).join('');
+  if(stories.length===0){feed.innerHTML='<div class="loading-card"><div style="font-size:14px;color:var(--text-muted)">No stories found for this topic.</div></div>';return;}
+  feed.innerHTML=stories.map((s,i)=>{
+    let card=renderCard(s);
+    if(i===0) card=card.replace('class="news-card"','class="news-card hero-card"');
+    return card;
+  }).join('');
 }
 
 function renderSentiment(){
@@ -464,9 +508,20 @@ function setFilter(cat,btn){currentFilter=cat;document.querySelectorAll('.nav-bt
 function showModal(key){const m=MODALS[key];if(!m)return;document.getElementById('modal-title').textContent=m.title;document.getElementById('modal-body').innerHTML=m.body;document.getElementById('modal-overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-function setBudgetCountdown(){const days=Math.ceil((new Date('2026-05-12')-new Date())/86400000);document.getElementById('budget-days').textContent=days>0?days:0;}
+const EVENTS=[
+  {date:'2026-05-02',label:'Nepean By-election',sub:'Mornington Peninsula, VIC',badge:'VIC State'},
+  {date:'2026-05-09',label:'Farrer By-election',sub:'Southwest NSW — 4-way race',badge:'NSW Federal'},
+  {date:'2026-05-12',label:'Federal Budget 2026',sub:'Treasurer Jim Chalmers',badge:'Federal'},
+  {date:'2026-07-01',label:'Stafford By-election',sub:'North Brisbane, QLD (TBC)',badge:'QLD State',tbc:true},
+  {date:'2026-11-28',label:'Victorian State Election',sub:'Full election — 88 seats',badge:'VIC State'},
+  {date:'2027-03-13',label:'NSW State Election',sub:'Full state election',badge:'NSW State'},
+];
+function renderEvents(){const strip=document.getElementById('events-strip');const now=new Date();strip.innerHTML=EVENTS.map(e=>{const days=Math.ceil((new Date(e.date)-now)/86400000);const urg=days<=10?'urgent':days<=21?'soon':'upcoming';const dH=e.tbc?'<div class="event-days tbc">TBC</div>':'<div class="event-days">'+(days>0?days:0)+'</div>';return'<div class="event-card '+urg+'"><div class="event-badge">'+e.badge+'</div>'+dH+'<div class="event-label">'+e.label+'</div><div class="event-sub">'+(e.tbc?e.sub:(days>0?days+' days · ':'')+e.sub)+'</div></div>';}).join('');}
+const QUICK_VOTE={id:'qv_cl',q:"Who is best placed to manage Australia's cost-of-living crisis?",opts:['Labor — stay the course','Coalition — time for change','Greens — tax the wealthy','None of them']};
+function renderQuickVote(){const v=pollVotes[QUICK_VOTE.id];if(!pollCounts[QUICK_VOTE.id])pollCounts[QUICK_VOTE.id]=[1840,1620,980,740];const c=pollCounts[QUICK_VOTE.id];const tot=c.reduce((a,b)=>a+b,0);const mx=Math.max(...c);const iv=v!==undefined;document.getElementById('qv-question').textContent=QUICK_VOTE.q;document.getElementById('qv-total').textContent=tot.toLocaleString()+' votes';document.getElementById('qv-opts').innerHTML=QUICK_VOTE.opts.map((opt,i)=>{const pct=Math.round(c[i]/tot*100);const iS=v===i,iW=c[i]===mx&&iv;return'<div class="qv-opt'+(iS?' qv-selected':'')+(iW?' qv-winner':'')+(iv?' qv-voted':'')+'" onclick="castQuickVote('+i+')">'+'<div class="qv-bar" style="width:'+(iv?pct:0)+'%"></div><div class="qv-row"><span class="qv-text">'+(iS?'<span class="qv-check">✓</span>':'')+opt+'</span><span class="qv-pct">'+(iv?pct+'%':'')+'</span></div></div>';}).join('');}
+function castQuickVote(i){if(pollVotes[QUICK_VOTE.id]!==undefined){showToast('Already voted');return;}pollCounts[QUICK_VOTE.id][i]+=1;pollVotes[QUICK_VOTE.id]=i;localStorage.setItem('pulseAU_votes',JSON.stringify(pollVotes));localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));showToast('Vote recorded!');renderQuickVote();}
 function setDate(){document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
-setDate();setBudgetCountdown();renderTrending();loadNews();
+setDate();renderEvents();renderQuickVote();renderTrending();loadNews();
 </script>
 </body>
 </html>
