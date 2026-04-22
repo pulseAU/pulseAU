@@ -4,174 +4,152 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PulseAU — Australian Politics, Your Voice</title>
-  <meta name="description" content="Australian political news with real community polling. Read today's stories from across the spectrum and have your say.">
+  <meta name="description" content="Australian political news with real community polling.">
   <meta property="og:title" content="PulseAU — Australian Politics, Your Voice">
-  <meta property="og:description" content="Australian political news with community polling. Read stories from left, centre and right — then vote on the issues that matter.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --navy: #0f1f3d; --navy-light: #1a3560; --gold: #c9973a; --gold-light: #e8b85a;
-      --bg: #f5f3ee; --bg-card: #ffffff; --border: #ddd8cc;
-      --text: #1a1a1a; --text-muted: #6b6459; --text-light: #9d9488;
-      --left-bg: #dbeafe; --left-fg: #1e40af;
-      --centre-bg: #f3f4f6; --centre-fg: #374151;
-      --right-bg: #fee2e2; --right-fg: #991b1b;
-    }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; min-height: 100vh; }
-    a { color: inherit; text-decoration: none; }
-
-    /* ── MASTHEAD ── */
-    .masthead { background: var(--navy); color: white; padding: 0 24px; }
-    .masthead-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 0 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .logo { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 600; color: white; letter-spacing: -0.5px; }
-    .logo-au { color: var(--gold); }
-    .tagline { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-left: 10px; }
-    .live-dot { display: inline-block; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; margin-right: 5px; animation: blink 2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .live-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
-    .live-date { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-
-    /* ── NAVBAR ── */
-    .navbar { background: var(--navy-light); padding: 0 24px; }
-    .navbar-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
-    .navbar-inner::-webkit-scrollbar { display: none; }
-    .nav-btn { padding: 10px 16px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); background: transparent; border: none; cursor: pointer; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid transparent; transition: all 0.15s; font-family: 'Inter', sans-serif; }
-    .nav-btn:hover { color: rgba(255,255,255,0.9); }
-    .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    /* ── LAYOUT ── */
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
-    @media (max-width: 768px) { .container { grid-template-columns: 1fr; padding: 16px; } .sidebar { display: none; } }
-
-    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--navy); }
-    .section-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--navy); }
-    .section-count { font-size: 12px; color: var(--text-light); }
-
-    /* ── BUDGET BANNER ── */
-    .budget-banner { background: var(--navy); color: white; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
-    .budget-countdown { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--gold); white-space: nowrap; }
-    .budget-text-head { font-size: 13px; font-weight: 600; color: white; }
-    .budget-text-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
-
-    /* ── LOADING ── */
-    .loading-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 40px; text-align: center; }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── NEWS CARD ── */
-    .news-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 16px; transition: box-shadow 0.2s; }
-    .news-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-    .card-image { width: 100%; height: 200px; object-fit: cover; display: block; background: var(--bg); }
-    .card-image-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, #e8e4dc 0%, #d4cfc6 100%); display: flex; align-items: center; justify-content: center; font-size: 28px; opacity: 0.4; }
-    .card-body { padding: 16px 18px; }
-    .card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .source-name { font-size: 11px; font-weight: 600; color: var(--navy); text-transform: uppercase; letter-spacing: 0.5px; }
-    .bias-pill { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-    .bias-left { background: var(--left-bg); color: var(--left-fg); }
-    .bias-centre { background: var(--centre-bg); color: var(--centre-fg); }
-    .bias-right { background: var(--right-bg); color: var(--right-fg); }
-    .cat-pill { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 10px; background: #fef3c7; color: #92400e; text-transform: uppercase; letter-spacing: 0.3px; }
-    .card-time { font-size: 11px; color: var(--text-light); margin-left: auto; }
-    .card-headline { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 500; line-height: 1.35; color: var(--text); margin-bottom: 8px; }
-    .card-headline a:hover { color: var(--navy); }
-    .card-summary { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 12px; }
-    .read-more { font-size: 12px; color: var(--navy); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
-    .read-more:hover { color: var(--gold); }
-
-    /* ── POLLS ── */
-    .poll-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
-    .poll-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: white; background: var(--navy); padding: 3px 8px; border-radius: 3px; }
-    .poll-question { font-size: 14px; font-weight: 500; color: var(--text); margin: 8px 0 10px; line-height: 1.45; }
-    .poll-options { display: flex; flex-direction: column; gap: 7px; }
-    .poll-option { position: relative; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; cursor: pointer; transition: border-color 0.15s; user-select: none; }
-    .poll-option:hover:not(.voted-state) { border-color: var(--navy); }
-    .poll-option.selected { border-color: var(--navy); border-width: 2px; }
-    .poll-option.winner-opt { border-color: var(--gold); }
-    .poll-bar-bg { position: absolute; top: 0; left: 0; height: 100%; background: #f0ece4; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); z-index: 0; }
-    .poll-option.winner-opt .poll-bar-bg { background: #fef3c7; }
-    .poll-option.selected .poll-bar-bg { background: #e8eef8; }
-    .poll-option-row { position: relative; z-index: 1; padding: 9px 12px; display: flex; justify-content: space-between; align-items: center; }
-    .poll-opt-text { font-size: 13px; color: var(--text); }
-    .poll-opt-check { font-size: 12px; color: var(--navy); font-weight: 600; margin-right: 4px; }
-    .poll-opt-pct { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 36px; text-align: right; }
-    .poll-footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-    .poll-total-votes { font-size: 11px; color: var(--text-light); }
-    .poll-share-btn { font-size: 11px; color: var(--navy); background: none; border: 1px solid var(--border); border-radius: 12px; padding: 3px 10px; cursor: pointer; font-family: 'Inter', sans-serif; }
-    .poll-share-btn:hover { background: var(--bg); }
-
-    /* ── SIDEBAR ── */
-    .sidebar-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-    .sidebar-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--navy); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); }
-    .sentiment-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .sentiment-row:last-child { margin-bottom: 0; }
-    .sentiment-lbl { color: var(--text-muted); min-width: 80px; font-size: 11px; }
-    .sent-bar-wrap { flex: 1; height: 5px; background: var(--border); border-radius: 3px; }
-    .sent-bar { height: 100%; border-radius: 3px; transition: width 0.5s; }
-    .sent-pct { font-size: 11px; font-weight: 600; color: var(--text-muted); min-width: 28px; text-align: right; }
-    .blindspot-item { padding: 10px; border: 1px solid #fde68a; background: #fffbeb; border-radius: 6px; margin-bottom: 8px; }
-    .blindspot-item:last-child { margin-bottom: 0; }
-    .blindspot-label { font-size: 10px; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .blindspot-text { font-size: 12px; color: var(--text); line-height: 1.4; }
-    .trending-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .trending-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .trending-num { font-size: 18px; font-weight: 700; color: var(--border); font-family: 'Playfair Display', serif; line-height: 1; min-width: 24px; }
-    .trending-q { font-size: 12px; color: var(--text); line-height: 1.4; margin-bottom: 3px; }
-    .trending-votes { font-size: 11px; color: var(--text-light); }
-    .bias-guide { display: flex; flex-direction: column; gap: 8px; }
-    .bias-guide-row { display: flex; align-items: flex-start; gap: 8px; }
-    .bias-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
-    .bias-dot-left { background: var(--left-fg); }
-    .bias-dot-centre { background: #9ca3af; }
-    .bias-dot-right { background: var(--right-fg); }
-    .bias-sources { font-size: 11px; color: var(--text-light); }
-    .live-news-note { background: #e8f4fd; border: 1px solid #bde0f7; border-radius: 6px; padding: 8px 14px; font-size: 12px; color: #1e6a9e; margin-bottom: 16px; }
-
-    /* ── FOOTER ── */
-    .footer { background: var(--navy); padding: 32px 24px; margin-top: 32px; }
-    .footer-inner { max-width: 1100px; margin: 0 auto; }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: white; margin-bottom: 6px; }
-    .footer-tagline { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
-    .footer-disclaimer { font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.7; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px; max-width: 860px; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-    .footer-links a { font-size: 12px; color: var(--gold); text-decoration: none; cursor: pointer; }
-    .footer-links a:hover { text-decoration: underline; }
-    .footer-sep { color: rgba(255,255,255,0.2); font-size: 12px; }
-    .footer-copy { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 12px; }
-
-    /* ── MODAL ── */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.55); z-index: 2000; align-items: center; justify-content: center; padding: 24px; }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: white; border-radius: 10px; max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: white; z-index: 1; }
-    .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--navy); }
-    .modal-close { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--text-muted); padding: 4px 8px; border-radius: 4px; }
-    .modal-close:hover { background: var(--bg); }
-    .modal-body { padding: 20px 24px 28px; font-size: 13px; line-height: 1.75; color: var(--text); }
-    .modal-body h3 { font-size: 14px; font-weight: 600; color: var(--navy); margin: 18px 0 6px; }
-    .modal-body h3:first-child { margin-top: 0; }
-    .modal-body p { margin-bottom: 10px; color: var(--text-muted); }
-    .modal-body ul { padding-left: 18px; margin-bottom: 10px; color: var(--text-muted); }
-    .modal-body li { margin-bottom: 5px; }
-    .modal-body a { color: var(--navy); }
-
-    /* ── TOAST ── */
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 1000; pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0f1f3d;--navy-light:#1a3560;--gold:#c9973a;--bg:#f5f3ee;--bg-card:#fff;--border:#ddd8cc;--text:#1a1a1a;--text-muted:#6b6459;--text-light:#9d9488;--left-bg:#dbeafe;--left-fg:#1e40af;--centre-bg:#f3f4f6;--centre-fg:#374151;--right-bg:#fee2e2;--right-fg:#991b1b}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    .masthead{background:var(--navy);padding:0 24px}
+    .masthead-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 0 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .logo{font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:#fff;letter-spacing:-.5px}
+    .logo-au{color:var(--gold)}
+    .tagline{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-left:10px}
+    .live-dot{display:inline-block;width:6px;height:6px;background:#22c55e;border-radius:50%;margin-right:5px;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+    .live-label{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px}
+    .live-date{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px}
+    .navbar{background:var(--navy-light);padding:0 24px}
+    .navbar-inner{max-width:1100px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+    .navbar-inner::-webkit-scrollbar{display:none}
+    .nav-btn{padding:10px 16px;font-size:12px;font-weight:500;color:rgba(255,255,255,.6);background:transparent;border:none;cursor:pointer;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid transparent;transition:all .15s;font-family:'Inter',sans-serif}
+    .nav-btn:hover{color:rgba(255,255,255,.9)}
+    .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .container{max-width:1100px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 300px;gap:24px}
+    @media(max-width:768px){.container{grid-template-columns:1fr;padding:16px}.sidebar{display:none}}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--navy)}
+    .section-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--navy)}
+    .section-count{font-size:12px;color:var(--text-light)}
+    .budget-banner{background:var(--navy);color:#fff;border-radius:8px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+    .budget-countdown{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--gold);white-space:nowrap}
+    .budget-text-head{font-size:13px;font-weight:600}
+    .budget-text-sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:2px}
+    .loading-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:40px;text-align:center}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .live-news-note{background:#e8f4fd;border:1px solid #bde0f7;border-radius:6px;padding:8px 14px;font-size:12px;color:#1e6a9e;margin-bottom:16px}
+    /* CARD WITH IMAGE */
+    .news-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;transition:box-shadow .2s}
+    .news-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+    .card-img-wrap{position:relative;width:100%;height:220px;overflow:hidden;background:#d4cfc6}
+    .card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+    .news-card:hover .card-img-wrap img{transform:scale(1.04)}
+    .card-img-overlay{position:absolute;bottom:0;left:0;right:0;padding:48px 16px 14px;background:linear-gradient(to top,rgba(8,16,36,.9) 0%,rgba(8,16,36,.5) 55%,transparent 100%)}
+    .card-img-meta{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+    .card-img-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;line-height:1.3;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+    .card-img-title a{color:#fff}
+    .card-img-title a:hover{color:var(--gold)}
+    .source-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:.5px}
+    .bias-pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
+    .bias-left{background:var(--left-bg);color:var(--left-fg)}
+    .bias-centre{background:var(--centre-bg);color:var(--centre-fg)}
+    .bias-right{background:var(--right-bg);color:var(--right-fg)}
+    .cat-pill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:rgba(201,151,58,.9);color:#fff;text-transform:uppercase;letter-spacing:.3px}
+    .card-time{font-size:11px;color:rgba(255,255,255,.7);margin-left:auto}
+    .card-body{padding:14px 18px 16px}
+    .card-summary{font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:12px}
+    .read-more{font-size:12px;color:var(--navy);font-weight:500;text-decoration:underline;text-underline-offset:3px}
+    .read-more:hover{color:var(--gold)}
+    /* POLLS */
+    .poll-divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+    .poll-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#fff;background:var(--navy);padding:3px 8px;border-radius:3px}
+    .poll-question{font-size:14px;font-weight:500;color:var(--text);margin:8px 0 10px;line-height:1.45}
+    .poll-options{display:flex;flex-direction:column;gap:7px}
+    .poll-option{position:relative;border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .15s;user-select:none}
+    .poll-option:hover:not(.voted-state){border-color:var(--navy)}
+    .poll-option.selected{border-color:var(--navy);border-width:2px}
+    .poll-option.winner-opt{border-color:var(--gold)}
+    .poll-bar-bg{position:absolute;top:0;left:0;height:100%;background:#f0ece4;transition:width .5s cubic-bezier(.4,0,.2,1);z-index:0}
+    .poll-option.winner-opt .poll-bar-bg{background:#fef3c7}
+    .poll-option.selected .poll-bar-bg{background:#e8eef8}
+    .poll-option-row{position:relative;z-index:1;padding:9px 12px;display:flex;justify-content:space-between;align-items:center}
+    .poll-opt-text{font-size:13px;color:var(--text)}
+    .poll-opt-check{font-size:12px;color:var(--navy);font-weight:600;margin-right:4px}
+    .poll-opt-pct{font-size:12px;font-weight:600;color:var(--text-muted);min-width:36px;text-align:right}
+    .poll-footer-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .poll-total-votes{font-size:11px;color:var(--text-light)}
+    .poll-share-btn{font-size:11px;color:var(--navy);background:none;border:1px solid var(--border);border-radius:12px;padding:3px 10px;cursor:pointer;font-family:'Inter',sans-serif}
+    .poll-share-btn:hover{background:var(--bg)}
+    /* SIDEBAR */
+    .sidebar-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+    .sidebar-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--navy)}
+    .sentiment-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .sentiment-row:last-child{margin-bottom:0}
+    .sentiment-lbl{color:var(--text-muted);min-width:80px;font-size:11px}
+    .sent-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:3px}
+    .sent-bar{height:100%;border-radius:3px;transition:width .5s}
+    .sent-pct{font-size:11px;font-weight:600;color:var(--text-muted);min-width:28px;text-align:right}
+    .blindspot-item{padding:10px;border:1px solid #fde68a;background:#fffbeb;border-radius:6px;margin-bottom:8px}
+    .blindspot-item:last-child{margin-bottom:0}
+    .blindspot-label{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+    .blindspot-text{font-size:12px;color:var(--text);line-height:1.4}
+    .trending-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .trending-item:last-child{border-bottom:none;padding-bottom:0}
+    .trending-num{font-size:18px;font-weight:700;color:var(--border);font-family:'Playfair Display',serif;line-height:1;min-width:24px}
+    .trending-q{font-size:12px;color:var(--text);line-height:1.4;margin-bottom:3px}
+    .trending-votes{font-size:11px;color:var(--text-light)}
+    .bias-guide{display:flex;flex-direction:column;gap:8px}
+    .bias-guide-row{display:flex;align-items:flex-start;gap:8px}
+    .bias-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .bias-dot-left{background:var(--left-fg)}
+    .bias-dot-centre{background:#9ca3af}
+    .bias-dot-right{background:var(--right-fg)}
+    .bias-sources{font-size:11px;color:var(--text-light)}
+    /* FOOTER */
+    .footer{background:var(--navy);padding:32px 24px;margin-top:32px}
+    .footer-inner{max-width:1100px;margin:0 auto}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#fff;margin-bottom:6px}
+    .footer-tagline{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px}
+    .footer-disclaimer{font-size:11px;color:rgba(255,255,255,.4);line-height:1.7;border-top:1px solid rgba(255,255,255,.1);padding-top:14px;max-width:860px}
+    .footer-links{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)}
+    .footer-links a{font-size:12px;color:var(--gold);text-decoration:none;cursor:pointer}
+    .footer-links a:hover{text-decoration:underline}
+    .footer-sep{color:rgba(255,255,255,.2);font-size:12px}
+    .footer-copy{font-size:11px;color:rgba(255,255,255,.3);margin-top:12px}
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:24px}
+    .modal-overlay.open{display:flex}
+    .modal-box{background:#fff;border-radius:10px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:1}
+    .modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--navy)}
+    .modal-close{background:none;border:none;font-size:16px;cursor:pointer;color:var(--text-muted);padding:4px 8px;border-radius:4px}
+    .modal-close:hover{background:var(--bg)}
+    .modal-body{padding:20px 24px 28px;font-size:13px;line-height:1.75;color:var(--text)}
+    .modal-body h3{font-size:14px;font-weight:600;color:var(--navy);margin:18px 0 6px}
+    .modal-body h3:first-child{margin-top:0}
+    .modal-body p{margin-bottom:10px;color:var(--text-muted)}
+    .modal-body ul{padding-left:18px;margin-bottom:10px;color:var(--text-muted)}
+    .modal-body li{margin-bottom:5px}
+    .modal-body a{color:var(--navy)}
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:1000;pointer-events:none}
+    .toast.show{transform:translateX(-50%) translateY(0)}
   </style>
 </head>
 <body>
 
 <div class="masthead">
   <div class="masthead-inner">
-    <div style="display:flex;align-items:baseline;gap:10px;">
+    <div style="display:flex;align-items:baseline;gap:10px">
       <div class="logo">Pulse<span class="logo-au">AU</span></div>
       <span class="tagline">Australian politics · Your voice</span>
     </div>
-    <div style="text-align:right;">
+    <div style="text-align:right">
       <div class="live-label"><span class="live-dot"></span>Live</div>
       <div class="live-date" id="live-date"></div>
     </div>
@@ -181,11 +159,11 @@
 <div class="navbar">
   <div class="navbar-inner">
     <button class="nav-btn active" onclick="setFilter('all',this)">All Topics</button>
-    <button class="nav-btn" onclick="setFilter('economy',this)">Economy & Budget</button>
+    <button class="nav-btn" onclick="setFilter('economy',this)">Economy &amp; Budget</button>
     <button class="nav-btn" onclick="setFilter('housing',this)">Housing</button>
     <button class="nav-btn" onclick="setFilter('energy',this)">Energy</button>
     <button class="nav-btn" onclick="setFilter('immigration',this)">Immigration</button>
-    <button class="nav-btn" onclick="setFilter('health',this)">Health & NDIS</button>
+    <button class="nav-btn" onclick="setFilter('health',this)">Health &amp; NDIS</button>
     <button class="nav-btn" onclick="setFilter('climate',this)">Climate</button>
     <button class="nav-btn" onclick="setFilter('politics',this)">Politics</button>
   </div>
@@ -204,12 +182,11 @@
       <div class="section-title">Today's Stories</div>
       <div class="section-count" id="story-count"></div>
     </div>
-    <div class="live-news-note" id="live-note" style="display:none;"></div>
+    <div class="live-news-note" id="live-note" style="display:none"></div>
     <div id="news-feed">
-      <div class="loading-card"><div class="spinner"></div><div style="font-size:14px;color:var(--text-muted);">Fetching today's Australian political news…</div></div>
+      <div class="loading-card"><div class="spinner"></div><div style="font-size:14px;color:var(--text-muted)">Fetching today's Australian political news…</div></div>
     </div>
   </main>
-
   <aside class="sidebar">
     <div class="sidebar-card">
       <div class="sidebar-title">Community Sentiment</div>
@@ -217,18 +194,9 @@
     </div>
     <div class="sidebar-card">
       <div class="sidebar-title">⚠ Blindspot Stories</div>
-      <div class="blindspot-item">
-        <div class="blindspot-label">Left-only coverage</div>
-        <div class="blindspot-text">Greens push to extend fuel excise cut — scant right coverage</div>
-      </div>
-      <div class="blindspot-item">
-        <div class="blindspot-label">Right-only coverage</div>
-        <div class="blindspot-text">Coalition water infrastructure plan for regional QLD — barely covered by ABC or Guardian</div>
-      </div>
-      <div class="blindspot-item">
-        <div class="blindspot-label">Under-reported</div>
-        <div class="blindspot-text">NDIS Thriving Kids transition timeline — major policy shift with limited mainstream coverage</div>
-      </div>
+      <div class="blindspot-item"><div class="blindspot-label">Left-only coverage</div><div class="blindspot-text">Greens push to extend fuel excise cut — scant right coverage</div></div>
+      <div class="blindspot-item"><div class="blindspot-label">Right-only coverage</div><div class="blindspot-text">Coalition water infrastructure plan for regional QLD — barely covered by ABC or Guardian</div></div>
+      <div class="blindspot-item"><div class="blindspot-label">Under-reported</div><div class="blindspot-text">NDIS Thriving Kids transition timeline — major policy shift with limited mainstream coverage</div></div>
     </div>
     <div class="sidebar-card">
       <div class="sidebar-title">Trending Polls</div>
@@ -237,41 +205,31 @@
     <div class="sidebar-card">
       <div class="sidebar-title">Source Bias Guide</div>
       <div class="bias-guide">
-        <div class="bias-guide-row"><div class="bias-dot bias-dot-left"></div><div><div style="font-size:12px;color:var(--text);">Centre-left</div><div class="bias-sources">The Guardian, SMH, The Age, SBS</div></div></div>
-        <div class="bias-guide-row"><div class="bias-dot bias-dot-centre"></div><div><div style="font-size:12px;color:var(--text);">Centre</div><div class="bias-sources">ABC News, Reuters Australia</div></div></div>
-        <div class="bias-guide-row"><div class="bias-dot bias-dot-right"></div><div><div style="font-size:12px;color:var(--text);">Centre-right / Right</div><div class="bias-sources">AFR, Sky News, Courier-Mail, The Australian</div></div></div>
+        <div class="bias-guide-row"><div class="bias-dot bias-dot-left"></div><div><div style="font-size:12px;color:var(--text)">Centre-left</div><div class="bias-sources">The Guardian, SMH, The Age, SBS</div></div></div>
+        <div class="bias-guide-row"><div class="bias-dot bias-dot-centre"></div><div><div style="font-size:12px;color:var(--text)">Centre</div><div class="bias-sources">ABC News, Reuters Australia</div></div></div>
+        <div class="bias-guide-row"><div class="bias-dot bias-dot-right"></div><div><div style="font-size:12px;color:var(--text)">Centre-right / Right</div><div class="bias-sources">AFR, Sky News, Courier-Mail, The Australian</div></div></div>
       </div>
     </div>
   </aside>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
   <div class="footer-inner">
     <div class="footer-logo">Pulse<span style="color:var(--gold)">AU</span></div>
     <p class="footer-tagline">Independent Australian political news aggregation with community polling.</p>
-    <div class="footer-disclaimer">
-      <strong style="color:rgba(255,255,255,0.6);">Content disclaimer:</strong> PulseAU aggregates publicly available RSS feeds published by third-party news organisations. All article headlines, summaries and linked content remain the intellectual property of their respective publishers. PulseAU does not reproduce full article text. Linking and headline aggregation is consistent with the Federal Court of Australia's ruling in <em>Fairfax Media Publications Pty Ltd v Reed International Books Australia Pty Ltd</em> [2010] FCA 984 and the fair dealing provisions of the <em>Copyright Act 1968</em> (Cth). Source attribution and outbound links to original articles are provided on every story.
-    </div>
-    <div class="footer-disclaimer" style="margin-top:10px;">
-      <strong style="color:rgba(255,255,255,0.6);">Poll disclaimer:</strong> Community polls on PulseAU are informal and non-scientific. Results reflect the views of site visitors only and are not representative of the broader Australian population. Poll results should not be cited as representative public opinion data. PulseAU is politically independent and does not endorse any party, candidate or policy position.
-    </div>
+    <div class="footer-disclaimer"><strong style="color:rgba(255,255,255,.6)">Content disclaimer:</strong> PulseAU aggregates publicly available RSS feeds. All article content remains the property of respective publishers. Consistent with <em>Fairfax Media Publications Pty Ltd v Reed International Books Australia Pty Ltd</em> [2010] FCA 984 and the <em>Copyright Act 1968</em> (Cth).</div>
+    <div class="footer-disclaimer" style="margin-top:10px"><strong style="color:rgba(255,255,255,.6)">Poll disclaimer:</strong> Community polls are informal and non-scientific. Results are not representative of the broader Australian population. PulseAU does not endorse any party, candidate or policy position.</div>
     <div class="footer-links">
-      <a onclick="showModal('about')">About PulseAU</a>
-      <span class="footer-sep">·</span>
-      <a onclick="showModal('tos')">Terms of Use</a>
-      <span class="footer-sep">·</span>
-      <a onclick="showModal('privacy')">Privacy Policy</a>
-      <span class="footer-sep">·</span>
-      <a onclick="showModal('bias')">Bias Methodology</a>
-      <span class="footer-sep">·</span>
+      <a onclick="showModal('about')">About PulseAU</a><span class="footer-sep">·</span>
+      <a onclick="showModal('tos')">Terms of Use</a><span class="footer-sep">·</span>
+      <a onclick="showModal('privacy')">Privacy Policy</a><span class="footer-sep">·</span>
+      <a onclick="showModal('bias')">Bias Methodology</a><span class="footer-sep">·</span>
       <a href="mailto:hello@pulseau.net">Contact</a>
     </div>
-    <p class="footer-copy">© 2026 PulseAU. All rights reserved. Brisbane, Australia. · News sourced from public RSS feeds. Bias ratings are indicative only.</p>
+    <p class="footer-copy">© 2026 PulseAU. All rights reserved. Brisbane, Australia.</p>
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-header">
@@ -281,37 +239,48 @@
     <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
-const SOURCES = [
-  { name: 'ABC News', url: 'https://www.abc.net.au/news/feed/51120/rss.xml', bias: 'centre', biasLabel: 'Centre' },
-  { name: 'The Guardian', url: 'https://www.theguardian.com/australia-news/rss', bias: 'left', biasLabel: 'Centre-left' },
-  { name: 'Sky News', url: 'https://www.skynews.com.au/feed', bias: 'right', biasLabel: 'Right' },
-  { name: 'SBS News', url: 'https://www.sbs.com.au/news/feed', bias: 'left', biasLabel: 'Centre-left' },
+const RSS2JSON='https://api.rss2json.com/v1/api.json?rss_url=';
+const SOURCES=[
+  {name:'ABC News',url:'https://www.abc.net.au/news/feed/51120/rss.xml',bias:'centre',biasLabel:'Centre'},
+  {name:'The Guardian',url:'https://www.theguardian.com/australia-news/rss',bias:'left',biasLabel:'Centre-left'},
+  {name:'Sky News',url:'https://www.skynews.com.au/feed',bias:'right',biasLabel:'Right'},
+  {name:'SBS News',url:'https://www.sbs.com.au/news/feed',bias:'left',biasLabel:'Centre-left'},
 ];
 
-const CURATED = [
-  { id:'c1', category:'economy', source:'ABC News', bias:'centre', biasLabel:'Centre', time:'2h ago', link:'https://www.abc.net.au/news', headline:'Federal Budget countdown: Chalmers flags inflation risk as May 12 deadline looms', summary:'Treasurer Jim Chalmers has warned Australia faces the prospect of higher inflation and lower economic growth, with the federal budget three weeks away. The government is weighing capital gains tax reform, NDIS spending cuts, and a $2.55 billion fuel excise extension as it tries to balance cost-of-living relief against fiscal responsibility.', poll:{ q:'What should the 2026 budget prioritise?', opts:['Cost-of-living relief','Reducing the deficit','More housing investment','Defence spending'] } },
-  { id:'c2', category:'housing', source:'AFR', bias:'right', biasLabel:'Centre-right', time:'3h ago', link:'https://www.afr.com', headline:'Home prices 55% above pre-COVID levels as National Housing Accord falls short of targets', summary:'National dwelling prices have risen close to 10% over the past year and are now around 55% higher than pre-COVID levels, with Brisbane recording a mortgage affordability reading of 31.7% of household income. Construction remains well short of the 1.2 million homes targeted under the National Housing Accord by June 2029.', poll:{ q:'What is the best solution to Australia\'s housing crisis?', opts:['More supply — build more homes','Reform negative gearing and CGT','Cut migration to reduce demand','All of the above'] } },
-  { id:'c3', category:'economy', source:'The Guardian', bias:'left', biasLabel:'Centre-left', time:'4h ago', link:'https://www.theguardian.com/australia-news', headline:'Government considers cutting capital gains tax discount from 50% to 25% in budget shake-up', summary:'The Albanese government is examining reducing the capital gains tax discount — currently 50% for assets held over 12 months — to either 33% or 25%. The measure is seen as the most politically viable path to improving housing affordability without a full negative gearing overhaul.', poll:{ q:'Should the capital gains tax discount for property be cut?', opts:['Yes — it would help first home buyers','No — it would hurt investors and supply','Only for investors, not owner-occupiers'] } },
-  { id:'c4', category:'energy', source:'Sky News', bias:'right', biasLabel:'Right', time:'5h ago', link:'https://www.skynews.com.au', headline:'Coalition\'s nuclear plan reignites as Labor rules out new renewable energy spending in May budget', summary:'The Albanese government will not commit new renewable energy investment in the upcoming budget. The Coalition continues to push its seven-reactor nuclear plan — with the first plant proposed to be online by 2036 — as energy bills remain elevated across the country.', poll:{ q:'What should power Australia\'s future electricity grid?', opts:['Renewables + batteries — go faster','Nuclear — needed for baseload','A mix of both','Gas as transition fuel'] } },
-  { id:'c5', category:'health', source:'SBS News', bias:'left', biasLabel:'Centre-left', time:'6h ago', link:'https://www.sbs.com.au/news', headline:'NDIS reform: Crossbench warns cutting $12 billion scheme will shift costs to hospitals and aged care', summary:'The government\'s plan to slow NDIS spending growth is facing pushback from crossbench MPs who warn cuts will simply push costs onto the health and aged care sectors. The reform taskforce is working to roll out the replacement Thriving Kids program.', poll:{ q:'What should happen with the NDIS?', opts:['Cut spending — it\'s unsustainable','Keep funding — don\'t cut disability services','Reform the model but protect participants'] } },
-  { id:'c6', category:'immigration', source:'ABC News', bias:'centre', biasLabel:'Centre', time:'8h ago', link:'https://www.abc.net.au/news', headline:'Net overseas migration forecast to halve to 260,000 in 2026 as student visa tightening takes effect', summary:'Australia\'s net overseas migration is forecast to drop to 260,000 in 2026 — half the 2023 peak — as student visa restrictions take hold. The permanent migration cap remains at 185,000 places.', poll:{ q:'Is Australia\'s migration intake at the right level?', opts:['Still too high — reduce further','About right at 185,000','Too low — skills shortages are real','Focus on regional migration instead'] } },
-  { id:'c7', category:'economy', source:'AFR', bias:'right', biasLabel:'Centre-right', time:'9h ago', link:'https://www.afr.com', headline:'RBA hikes rates to 4.1% — two rises in two months as inflation re-emerges', summary:'The Reserve Bank of Australia raised its policy cash rate by 25 basis points in both February and March 2026, bringing the rate to 4.1%. Sydney now records the worst mortgage affordability of any capital city at 40.4% of household income.', poll:{ q:'Is the RBA right to keep raising interest rates?', opts:['Yes — inflation must be tamed','No — households are already stretched','Should pause and assess the data'] } },
-  { id:'c8', category:'politics', source:'The Guardian', bias:'left', biasLabel:'Centre-left', time:'10h ago', link:'https://www.theguardian.com/australia-news', headline:'Defence spending to rise to 3% of GDP by 2033 in $53 billion boost as Indo-Pacific tensions grow', summary:'The Albanese government has announced a $53 billion boost to defence spending over 10 years, pushing Australia to 3% of GDP by 2033. The announcement comes amid escalating tensions in the Indo-Pacific and follows sustained pressure from the United States.', poll:{ q:'Should Australia increase its defence spending to 3% of GDP?', opts:['Yes — regional security demands it','No — money better spent domestically','Yes, but with greater strategic independence'] } },
-  { id:'c9', category:'climate', source:'ABC News', bias:'centre', biasLabel:'Centre', time:'12h ago', link:'https://www.abc.net.au/news', headline:'OECD says Australia on track for 2030 emissions target but net-zero strategy for transport \'lacks detail\'', summary:'A new OECD Economic Survey says Australia is on track to meet its 2030 emissions target thanks to progress in electricity generation, but warns achieving net-zero by 2050 will require a credible strategy to cut transport and agricultural emissions.', poll:{ q:'Is Australia doing enough to reach net-zero by 2050?', opts:['Yes — we\'re on the right track','Partially — needs much more on transport','No — the targets aren\'t credible','Net-zero is the wrong goal entirely'] } },
-  { id:'c10', category:'housing', source:'SBS News', bias:'left', biasLabel:'Centre-left', time:'14h ago', link:'https://www.sbs.com.au/news', headline:'Victoria builds 1-in-3 new Australian homes — but Brisbane and Perth lag as affordability bites', summary:'Victoria built one in three new Australian homes completed since 2020, resulting in house price growth of just 16% compared to a national average of 55%. Queensland and Western Australia are identified as the biggest laggards in housing supply, with Olympic infrastructure competing for the same construction workforce in Brisbane.', poll:{ q:'Who bears the most responsibility for the housing shortage?', opts:['State governments — slow planning approvals','Federal government — migration too high','Developers — land banking','All equally responsible'] } },
-  { id:'c11', category:'economy', source:'Sky News', bias:'right', biasLabel:'Right', time:'16h ago', link:'https://www.skynews.com.au', headline:'Fuel excise cut saves households $19 per tank — but $2.55 billion cost raises budget sustainability questions', summary:'The government\'s temporary 26.3 cent per litre fuel excise cut is saving households around $19 per fill, but the three-month measure comes at a $2.55 billion cost to the budget. Critics argue the relief should be better targeted to low-income households.', poll:{ q:'Was the fuel excise cut the right way to deliver cost-of-living relief?', opts:['Yes — fast and effective','No — should target low-income households','Should have cut energy bills instead'] } },
-  { id:'c12', category:'politics', source:'ABC News', bias:'centre', biasLabel:'Centre', time:'1d ago', link:'https://www.abc.net.au/news', headline:'Queensland: 20 protesters arrested under ban on pro-Palestinian phrases at Anzac Day events', summary:'Queensland Police arrested 20 people for violating the state\'s recently enacted ban on certain pro-Palestinian slogans at Anzac Day commemorations in Brisbane. The arrests have reignited debate about free speech, policing of protest, and appropriate expression at national days of remembrance.', poll:{ q:'Should political protest be restricted at Anzac Day events?', opts:['Yes — Anzac Day must be kept non-political','No — free speech must be protected','Depends on the nature of the protest'] } },
-  { id:'c13', category:'health', source:'Sky News', bias:'right', biasLabel:'Right', time:'1d ago', link:'https://www.skynews.com.au', headline:'Federal government threatens to withhold hospital funding from states that don\'t meet targets', summary:'Health Minister Jenny McAllister has signalled the Commonwealth may withhold hospital funding from states failing to meet performance benchmarks, amid growing tensions with Queensland over ambulance ramping and emergency department wait times.', poll:{ q:'Should the federal government withhold hospital funding from underperforming states?', opts:['Yes — accountability is needed','No — it would hurt patients','Only as a last resort'] } },
-  { id:'c14', category:'immigration', source:'The Guardian', bias:'left', biasLabel:'Centre-left', time:'1d ago', link:'https://www.theguardian.com/australia-news', headline:'Australia\'s fertility rate hits record low of 1.49 as government faces pressure on population policy', summary:'Australia\'s fertility rate has fallen to a record low of 1.49 babies per woman, heightening long-term debates about the role of immigration in sustaining workforce growth and government services.', poll:{ q:'Should Australia\'s population policy prioritise migration or incentivising more births?', opts:['More skilled migration','Better family support to raise birth rates','Both equally','Australia is already big enough'] } },
-  { id:'c15', category:'energy', source:'The Guardian', bias:'left', biasLabel:'Centre-left', time:'2d ago', link:'https://www.theguardian.com/australia-news', headline:'EV road user charge \'being modelled\' by transport department despite minister\'s caution', summary:'Federal transport minister Catherine King confirmed a road user charge for EVs is being modelled by the Department of Transport. NSW Premier Chris Minns is a proponent of the charge as a replacement for fuel excise revenue lost to the EV transition.', poll:{ q:'Should electric vehicle owners pay a road user charge?', opts:['Yes — EV drivers use roads too','No — would slow the EV transition','Yes, but only once EVs reach 30% of fleet'] } },
+// Reliable Unsplash fallback images per category
+const CAT_IMG={
+  economy:'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=75&auto=format&fit=crop',
+  housing:'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=75&auto=format&fit=crop',
+  energy:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=75&auto=format&fit=crop',
+  immigration:'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=75&auto=format&fit=crop',
+  health:'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=75&auto=format&fit=crop',
+  climate:'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=800&q=75&auto=format&fit=crop',
+  politics:'https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=800&q=75&auto=format&fit=crop',
+  default:'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=75&auto=format&fit=crop',
+};
+
+const CURATED=[
+  {id:'c1',category:'economy',source:'ABC News',bias:'centre',biasLabel:'Centre',time:'2h ago',link:'https://www.abc.net.au/news',image:'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=75&auto=format&fit=crop',headline:'Federal Budget countdown: Chalmers flags inflation risk as May 12 deadline looms',summary:'Treasurer Jim Chalmers has warned Australia faces higher inflation and lower economic growth, with the federal budget three weeks away. The government is weighing capital gains tax reform, NDIS spending cuts, and a $2.55 billion fuel excise extension as it balances cost-of-living relief against fiscal responsibility.',poll:{q:'What should the 2026 budget prioritise?',opts:['Cost-of-living relief','Reducing the deficit','More housing investment','Defence spending']}},
+  {id:'c2',category:'housing',source:'AFR',bias:'right',biasLabel:'Centre-right',time:'3h ago',link:'https://www.afr.com',image:'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=75&auto=format&fit=crop',headline:'Home prices 55% above pre-COVID levels as National Housing Accord falls short of targets',summary:'National dwelling prices have risen close to 10% over the past year and are 55% higher than pre-COVID levels, with Brisbane recording a mortgage affordability reading of 31.7% of household income. Construction remains well short of the 1.2 million homes targeted under the National Housing Accord by June 2029.',poll:{q:'What is the best solution to Australia\'s housing crisis?',opts:['More supply — build more homes','Reform negative gearing and CGT','Cut migration to reduce demand','All of the above']}},
+  {id:'c3',category:'economy',source:'The Guardian',bias:'left',biasLabel:'Centre-left',time:'4h ago',link:'https://www.theguardian.com/australia-news',image:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=75&auto=format&fit=crop',headline:'Government considers cutting capital gains tax discount from 50% to 25% in budget shake-up',summary:'The Albanese government is examining reducing the capital gains tax discount — currently 50% for assets held over 12 months — to 25%. The measure is seen as the most politically viable path to improving housing affordability without a full negative gearing overhaul.',poll:{q:'Should the capital gains tax discount for property be cut?',opts:['Yes — it would help first home buyers','No — it would hurt investors and supply','Only for investors, not owner-occupiers']}},
+  {id:'c4',category:'energy',source:'Sky News',bias:'right',biasLabel:'Right',time:'5h ago',link:'https://www.skynews.com.au',image:'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=75&auto=format&fit=crop',headline:'Coalition\'s nuclear plan reignites as Labor rules out new renewable energy spending in May budget',summary:'The Albanese government will not commit new renewable energy investment in the upcoming budget. The Coalition continues to push its seven-reactor nuclear plan — with the first plant proposed online by 2036 — as energy bills remain elevated across the country.',poll:{q:'What should power Australia\'s future electricity grid?',opts:['Renewables + batteries — go faster','Nuclear — needed for baseload','A mix of both','Gas as transition fuel']}},
+  {id:'c5',category:'health',source:'SBS News',bias:'left',biasLabel:'Centre-left',time:'6h ago',link:'https://www.sbs.com.au/news',image:'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=75&auto=format&fit=crop',headline:'NDIS reform: Crossbench warns cutting $12 billion scheme will shift costs to hospitals and aged care',summary:'The government\'s plan to slow NDIS spending growth faces pushback from crossbench MPs who warn cuts will push costs onto health and aged care sectors. The reform taskforce is working to roll out the replacement Thriving Kids program.',poll:{q:'What should happen with the NDIS?',opts:['Cut spending — it\'s unsustainable','Keep funding — don\'t cut disability services','Reform the model but protect participants']}},
+  {id:'c6',category:'immigration',source:'ABC News',bias:'centre',biasLabel:'Centre',time:'8h ago',link:'https://www.abc.net.au/news',image:'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=75&auto=format&fit=crop',headline:'Net overseas migration forecast to halve to 260,000 in 2026 as student visa tightening takes effect',summary:'Australia\'s net overseas migration is forecast to drop to 260,000 in 2026 — half the 2023 peak — as student visa restrictions take hold. The permanent migration cap remains at 185,000 places.',poll:{q:'Is Australia\'s migration intake at the right level?',opts:['Still too high — reduce further','About right at 185,000','Too low — skills shortages are real','Focus on regional migration instead']}},
+  {id:'c7',category:'economy',source:'AFR',bias:'right',biasLabel:'Centre-right',time:'9h ago',link:'https://www.afr.com',image:'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?w=800&q=75&auto=format&fit=crop',headline:'RBA hikes rates to 4.1% — two rises in two months as inflation re-emerges',summary:'The Reserve Bank raised its cash rate by 25bp in both February and March 2026, bringing the rate to 4.1%. Sydney now records the worst mortgage affordability of any capital city at 40.4% of household income.',poll:{q:'Is the RBA right to keep raising interest rates?',opts:['Yes — inflation must be tamed','No — households are already stretched','Should pause and assess the data']}},
+  {id:'c8',category:'politics',source:'The Guardian',bias:'left',biasLabel:'Centre-left',time:'10h ago',link:'https://www.theguardian.com/australia-news',image:'https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=800&q=75&auto=format&fit=crop',headline:'Defence spending to rise to 3% of GDP by 2033 in $53 billion boost as Indo-Pacific tensions grow',summary:'The Albanese government has announced a $53 billion defence boost over 10 years, pushing Australia to 3% of GDP by 2033 amid escalating Indo-Pacific tensions and sustained US pressure.',poll:{q:'Should Australia increase its defence spending to 3% of GDP?',opts:['Yes — regional security demands it','No — money better spent domestically','Yes, but with greater strategic independence']}},
+  {id:'c9',category:'climate',source:'ABC News',bias:'centre',biasLabel:'Centre',time:'12h ago',link:'https://www.abc.net.au/news',image:'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=800&q=75&auto=format&fit=crop',headline:'OECD says Australia on track for 2030 emissions target but net-zero strategy for transport lacks detail',summary:'A new OECD Economic Survey says Australia is on track to meet its 2030 emissions target thanks to progress in electricity, but warns net-zero by 2050 requires a credible strategy for transport and agricultural emissions.',poll:{q:'Is Australia doing enough to reach net-zero by 2050?',opts:['Yes — we\'re on the right track','Partially — needs much more on transport','No — the targets aren\'t credible','Net-zero is the wrong goal entirely']}},
+  {id:'c10',category:'housing',source:'SBS News',bias:'left',biasLabel:'Centre-left',time:'14h ago',link:'https://www.sbs.com.au/news',image:'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=75&auto=format&fit=crop',headline:'Victoria builds 1-in-3 new Australian homes — but Brisbane and Perth lag as affordability bites',summary:'Victoria built one in three new Australian homes since 2020, with house price growth of just 16% compared to a national average of 55%. Queensland is identified as a laggard, with Olympic infrastructure competing for the same construction workforce.',poll:{q:'Who bears the most responsibility for the housing shortage?',opts:['State governments — slow planning approvals','Federal government — migration too high','Developers — land banking','All equally responsible']}},
+  {id:'c11',category:'economy',source:'Sky News',bias:'right',biasLabel:'Right',time:'16h ago',link:'https://www.skynews.com.au',image:'https://images.unsplash.com/photo-1615833022826-e8efae4b0890?w=800&q=75&auto=format&fit=crop',headline:'Fuel excise cut saves households $19 per tank — but $2.55 billion cost raises budget questions',summary:'The temporary 26.3 cent per litre fuel excise cut saves households around $19 per fill, but comes at a $2.55 billion budget cost. Critics argue relief should be better targeted to low-income households.',poll:{q:'Was the fuel excise cut the right way to deliver cost-of-living relief?',opts:['Yes — fast and effective','No — should target low-income households','Should have cut energy bills instead']}},
+  {id:'c12',category:'politics',source:'ABC News',bias:'centre',biasLabel:'Centre',time:'1d ago',link:'https://www.abc.net.au/news',image:'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&q=75&auto=format&fit=crop',headline:'Queensland: 20 protesters arrested under ban on pro-Palestinian phrases at Anzac Day events',summary:'Queensland Police arrested 20 people for violating the state\'s ban on certain pro-Palestinian slogans at Anzac Day commemorations in Brisbane, reigniting debate about free speech at national days of remembrance.',poll:{q:'Should political protest be restricted at Anzac Day events?',opts:['Yes — Anzac Day must be kept non-political','No — free speech must be protected','Depends on the nature of the protest']}},
+  {id:'c13',category:'health',source:'Sky News',bias:'right',biasLabel:'Right',time:'1d ago',link:'https://www.skynews.com.au',image:'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=75&auto=format&fit=crop',headline:'Federal government threatens to withhold hospital funding from states that don\'t meet targets',summary:'Health Minister Jenny McAllister signalled the Commonwealth may withhold hospital funding from states failing to meet performance benchmarks, amid tensions with Queensland over ambulance ramping and emergency wait times.',poll:{q:'Should the federal government withhold hospital funding from underperforming states?',opts:['Yes — accountability is needed','No — it would hurt patients','Only as a last resort']}},
+  {id:'c14',category:'immigration',source:'The Guardian',bias:'left',biasLabel:'Centre-left',time:'1d ago',link:'https://www.theguardian.com/australia-news',image:'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=75&auto=format&fit=crop',headline:'Australia\'s fertility rate hits record low of 1.49 as government faces pressure on population policy',summary:'Australia\'s fertility rate has fallen to a record low of 1.49 babies per woman, heightening debates about immigration\'s role in sustaining workforce growth and government services.',poll:{q:'Should Australia\'s population policy prioritise migration or incentivising more births?',opts:['More skilled migration','Better family support to raise birth rates','Both equally','Australia is already big enough']}},
+  {id:'c15',category:'energy',source:'The Guardian',bias:'left',biasLabel:'Centre-left',time:'2d ago',link:'https://www.theguardian.com/australia-news',image:'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=800&q=75&auto=format&fit=crop',headline:'EV road user charge being modelled by transport department despite minister\'s caution',summary:'Federal transport minister Catherine King confirmed a road user charge for EVs is being modelled by the Department of Transport. NSW Premier Chris Minns supports the charge as a replacement for fuel excise revenue lost to the EV transition.',poll:{q:'Should electric vehicle owners pay a road user charge?',opts:['Yes — EV drivers use roads too','No — would slow the EV transition','Yes, but only once EVs reach 30% of fleet']}},
 ];
 
-const POLL_BANK = {
+const POLL_BANK={
   housing:[{q:'Is the government doing enough on housing affordability?',opts:['Yes — meaningful progress','No — far more is needed','Too early to say']}],
   energy:[{q:'What should power Australia\'s electricity grid?',opts:['Renewables + batteries','Nuclear — needed for baseload','A mix of both']}],
   economy:[{q:'Do you trust the government\'s economic management?',opts:['Yes — strong confidence','Cautious confidence','No — lack confidence']}],
@@ -322,148 +291,105 @@ const POLL_BANK = {
   default:[{q:'Is this issue getting the attention it deserves?',opts:['Yes — right level of focus','Needs more focus','It\'s being overhyped']}],
 };
 
-const TRENDING = [
-  { q:'Should Australia become a republic?', votes:21840 },
-  { q:'Is the 2026 budget heading in the right direction?', votes:17302 },
-  { q:'Should the voting age be lowered to 16?', votes:11871 },
-  { q:'Is Australia too dependent on China for trade?', votes:9244 },
-  { q:'Should negative gearing be abolished?', votes:7651 },
+const TRENDING=[
+  {q:'Should Australia become a republic?',votes:21840},
+  {q:'Is the 2026 budget heading in the right direction?',votes:17302},
+  {q:'Should the voting age be lowered to 16?',votes:11871},
+  {q:'Is Australia too dependent on China for trade?',votes:9244},
+  {q:'Should negative gearing be abolished?',votes:7651},
 ];
 
-const SENTIMENT_TOPICS = [
-  { label:'Housing policy', key:'housing', pos:0 },
-  { label:'Energy future', key:'energy', pos:0 },
-  { label:'Budget mgmt', key:'economy', pos:0 },
-  { label:'Migration policy', key:'immigration', pos:1 },
+const SENTIMENT_TOPICS=[
+  {label:'Housing policy',key:'housing',pos:0},
+  {label:'Energy future',key:'energy',pos:0},
+  {label:'Budget mgmt',key:'economy',pos:0},
+  {label:'Migration policy',key:'immigration',pos:1},
 ];
 
-const TODAY = new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
-
-const MODALS = {
-  about: {
-    title:'About PulseAU',
-    body:`<h3>What is PulseAU?</h3><p>PulseAU is an independent Australian political news aggregator combined with a community polling platform. Our mission is to give everyday Australians a place to read political news from across the media spectrum — and to have their say on the issues that matter.</p><h3>Who runs it?</h3><p>PulseAU is an independent project based in Brisbane, Australia. We have no affiliation with any political party, government body, or media organisation.</p><h3>How does the news feed work?</h3><p>We aggregate publicly available RSS feeds from Australian news sources including ABC News, The Guardian Australia, Sky News and SBS News. We display headlines, short summaries, and links back to the original articles. We do not reproduce full article text.</p><h3>How do the polls work?</h3><p>Community polls are attached to news stories and allow visitors to vote on key policy questions. Polls are informal and non-scientific — they reflect the views of PulseAU visitors only. Results are stored in your browser and updated in real time.</p><h3>Contact us</h3><p>We'd love to hear from you. Email us at <a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`
-  },
-  tos: {
-    title:'Terms of Use',
-    body:`<p><em>Last updated: ${TODAY}</em></p><h3>1. Acceptance of terms</h3><p>By accessing or using PulseAU ("the Site"), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Site.</p><h3>2. Nature of the service</h3><p>PulseAU is a news aggregation and community polling service. We aggregate publicly available RSS feeds from third-party news publishers. We do not create, edit, or verify the accuracy of news content. All news content remains the property of the original publishers.</p><h3>3. Third-party content</h3><p>News headlines and summaries displayed on PulseAU are sourced from publicly published RSS feeds. All original content belongs to the respective publishers. PulseAU provides links to original articles and does not reproduce full article text. Use of headlines and short summaries is consistent with the <em>Copyright Act 1968</em> (Cth) and the Federal Court ruling in <em>Fairfax Media Publications Pty Ltd v Reed International Books Australia Pty Ltd</em> [2010] FCA 984.</p><h3>4. Community polls</h3><p>Community polls on PulseAU are informal, non-scientific, and for general interest only. Poll results do not represent the views of PulseAU and should not be cited as representative public opinion data. PulseAU reserves the right to remove or modify polls at any time.</p><h3>5. No political endorsement</h3><p>PulseAU is politically independent. We do not endorse any political party, candidate, policy position, or ideology. Bias ratings applied to news sources are indicative only.</p><h3>6. Limitation of liability</h3><p>PulseAU is provided "as is" without warranties of any kind. We are not liable for the accuracy, completeness, or timeliness of third-party news content, nor for any decisions made based on poll results displayed on the Site.</p><h3>7. Intellectual property</h3><p>The PulseAU name, logo, and original site design are the property of PulseAU. Third-party news content remains the property of respective publishers.</p><h3>8. Governing law</h3><p>These terms are governed by the laws of Queensland, Australia. Any disputes shall be subject to the exclusive jurisdiction of the courts of Queensland.</p><h3>9. Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`
-  },
-  privacy: {
-    title:'Privacy Policy',
-    body:`<p><em>Last updated: ${TODAY}</em></p><h3>What data we collect</h3><p>PulseAU collects minimal data:</p><ul><li><strong>Poll votes:</strong> Stored locally in your browser (localStorage). Not transmitted to any server or associated with your identity.</li><li><strong>Server logs:</strong> Our hosting provider (Netlify) automatically logs basic access information including IP addresses and pages visited, used for security and performance monitoring only.</li></ul><h3>What we do not collect</h3><ul><li>We do not require registration or account creation</li><li>We do not collect names, email addresses, or personal details</li><li>We do not use advertising tracking cookies</li><li>We do not sell or share any data with third parties</li></ul><h3>Third-party services</h3><ul><li><strong>RSS2JSON API</strong> — fetches news feeds. Your IP may be logged when news loads.</li><li><strong>Google Fonts</strong> — loads website fonts. Google may log font requests.</li><li><strong>Netlify</strong> — our hosting provider. See <a href="https://www.netlify.com/privacy/" target="_blank">Netlify's privacy policy</a>.</li></ul><h3>Your rights</h3><p>Under the <em>Privacy Act 1988</em> (Cth) and the Australian Privacy Principles, you have the right to access and correct personal information we hold. Given we collect no personal data beyond server logs, there is generally nothing to access or correct.</p><h3>Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`
-  },
-  bias: {
-    title:'Bias Methodology',
-    body:`<h3>How we rate sources</h3><p>PulseAU applies indicative bias ratings to news sources based on their general editorial positioning. These ratings help readers understand the perspective of a source — not to discredit it.</p><h3>Our ratings</h3><ul><li><strong>Centre-left:</strong> The Guardian Australia, Sydney Morning Herald, The Age, SBS</li><li><strong>Centre:</strong> ABC News, Reuters Australia</li><li><strong>Centre-right:</strong> Australian Financial Review</li><li><strong>Right:</strong> Sky News Australia, The Australian, Courier-Mail, Herald Sun</li></ul><h3>Important caveats</h3><p>Bias ratings are indicative and generalised. Individual articles may vary significantly from an outlet's general editorial position. Bias is not the same as inaccuracy — a source can have a perspective while still reporting factually.</p><p>Our ratings are informed by publicly available bias assessments including those produced by AllSides and Media Bias/Fact Check, adapted for the Australian context.</p><h3>Feedback</h3><p>If you believe a source has been miscategorised: <a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`
-  }
+const TODAY=new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
+const MODALS={
+  about:{title:'About PulseAU',body:`<h3>What is PulseAU?</h3><p>PulseAU is an independent Australian political news aggregator with community polling, based in Brisbane. We have no affiliation with any political party, government body, or media organisation.</p><h3>How does the news feed work?</h3><p>We aggregate publicly available RSS feeds from ABC News, The Guardian Australia, Sky News and SBS. We show headlines, short summaries, and links to original articles. We never reproduce full article text.</p><h3>How do the polls work?</h3><p>Community polls are informal and non-scientific — they reflect the views of PulseAU visitors only, stored in your browser.</p><h3>Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
+  tos:{title:'Terms of Use',body:`<p><em>Last updated: ${TODAY}</em></p><h3>1. Acceptance</h3><p>By using PulseAU you agree to these terms.</p><h3>2. Content</h3><p>PulseAU aggregates public RSS feeds. All content remains the property of original publishers. Use of headlines and short summaries is consistent with the <em>Copyright Act 1968</em> (Cth) and <em>Fairfax Media Publications v Reed International Books</em> [2010] FCA 984.</p><h3>3. Polls</h3><p>Community polls are informal and non-scientific. Results should not be cited as representative public opinion data.</p><h3>4. No endorsement</h3><p>PulseAU is politically independent and does not endorse any party or policy.</p><h3>5. Liability</h3><p>PulseAU is provided "as is". We are not liable for the accuracy of third-party content.</p><h3>6. Governing law</h3><p>Queensland, Australia. Contact: <a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
+  privacy:{title:'Privacy Policy',body:`<p><em>Last updated: ${TODAY}</em></p><h3>What we collect</h3><ul><li><strong>Poll votes</strong> — stored in your browser only, never sent to a server</li><li><strong>Server logs</strong> — Netlify logs IP addresses for security purposes only</li></ul><h3>What we don't collect</h3><ul><li>No registration required, no personal details, no ad tracking, no data sold</li></ul><h3>Third-party services</h3><ul><li>RSS2JSON (news fetching), Unsplash (images), Google Fonts, Netlify (hosting)</li></ul><h3>Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
+  bias:{title:'Bias Methodology',body:`<h3>How we rate sources</h3><p>Bias ratings indicate a source's general editorial positioning — not accuracy.</p><h3>Ratings</h3><ul><li><strong>Centre-left:</strong> The Guardian, SMH, The Age, SBS</li><li><strong>Centre:</strong> ABC News, Reuters Australia</li><li><strong>Centre-right:</strong> AFR</li><li><strong>Right:</strong> Sky News, The Australian, Courier-Mail, Herald Sun</li></ul><p>Individual articles may differ from an outlet's general position. Contact us if you believe a rating is wrong: <a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`}
 };
 
-let allStories = [];
-let currentFilter = 'all';
-let pollVotes = JSON.parse(localStorage.getItem('pulseAU_votes') || '{}');
-let pollCounts = JSON.parse(localStorage.getItem('pulseAU_counts') || '{}');
+let allStories=[],currentFilter='all';
+let pollVotes=JSON.parse(localStorage.getItem('pulseAU_votes')||'{}');
+let pollCounts=JSON.parse(localStorage.getItem('pulseAU_counts')||'{}');
 
-function slugify(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60); }
-
-function detectCategory(title, desc) {
-  const t = (title + ' ' + (desc||'')).toLowerCase();
-  if (/budget|chalmers|tax|gdp|inflation|rba|interest rate|cost.of.living|recession|fiscal|deficit|fuel excise|superannuation/.test(t)) return 'economy';
-  if (/hous|rent|tenant|landlord|property|mortgage|apartment|affordab|dwelling|negative gearing/.test(t)) return 'housing';
-  if (/energy|power|electric|nuclear|coal|gas|renewabl|solar|wind|battery|grid|emission/.test(t)) return 'energy';
-  if (/migrat|immigr|visa|border|refugee|asylum|overseas student/.test(t)) return 'immigration';
-  if (/health|hospital|medicare|aged care|ndis|disability|gp|ambulance/.test(t)) return 'health';
-  if (/climat|carbon|net zero|paris|environment|temperature/.test(t)) return 'climate';
+function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}
+function detectCategory(title,desc){
+  const t=(title+' '+(desc||'')).toLowerCase();
+  if(/budget|chalmers|tax|gdp|inflation|rba|interest rate|cost.of.living|fiscal|deficit|fuel excise|superannuation/.test(t)) return 'economy';
+  if(/hous|rent|tenant|landlord|property|mortgage|affordab|dwelling|negative gearing/.test(t)) return 'housing';
+  if(/energy|power|electric|nuclear|coal|gas|renewabl|solar|wind|battery|grid/.test(t)) return 'energy';
+  if(/migrat|immigr|visa|border|refugee|asylum|overseas student/.test(t)) return 'immigration';
+  if(/health|hospital|medicare|aged care|ndis|disability|gp|ambulance/.test(t)) return 'health';
+  if(/climat|carbon|net zero|paris|environment/.test(t)) return 'climate';
   return 'politics';
 }
+function ensurePollCounts(id,opts){if(!pollCounts[id]){pollCounts[id]=opts.map(()=>Math.floor(Math.random()*1200)+300);localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));}}
+CURATED.forEach(s=>ensurePollCounts(s.id,s.poll.opts));
+function timeAgo(d){const date=new Date(d);if(isNaN(date))return'';const m=Math.round((Date.now()-date)/60000);if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago';}
+function stripHtml(h){return h?h.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").trim():'';}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function getImg(s){return s.image||CAT_IMG[s.category]||CAT_IMG.default;}
 
-function ensurePollCounts(id, opts) {
-  if (!pollCounts[id]) {
-    pollCounts[id] = opts.map(() => Math.floor(Math.random()*1200)+300);
-    localStorage.setItem('pulseAU_counts', JSON.stringify(pollCounts));
-  }
-}
-
-CURATED.forEach(s => ensurePollCounts(s.id, s.poll.opts));
-
-function timeAgo(dateStr) {
-  const d = new Date(dateStr); if (isNaN(d)) return '';
-  const mins = Math.round((Date.now()-d)/60000);
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.round(mins/60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.round(hrs/24)}d ago`;
-}
-
-function stripHtml(html) {
-  return html ? html.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").trim() : '';
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
-}
-
-async function fetchSource(source) {
-  try {
-    const url = RSS2JSON + encodeURIComponent(source.url) + '&count=4';
-    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
-    const data = await res.json();
-    if (data.status !== 'ok' || !data.items) return [];
-    return data.items.map((item,i) => {
-      const id = 'rss-' + slugify(item.title||'') + '-' + i;
-      const cat = detectCategory(item.title, item.description);
-      const poll = (POLL_BANK[cat]||POLL_BANK.default)[0];
-      ensurePollCounts(id, poll.opts);
-      return { id, title:stripHtml(item.title), summary:stripHtml(item.description).slice(0,240)+'…', link:item.link, image:item.enclosure?.link||item.thumbnail||null, pubDate:item.pubDate, source:source.name, bias:source.bias, biasLabel:source.biasLabel, category:cat, poll, time:timeAgo(item.pubDate) };
+async function fetchSource(source){
+  try{
+    const url=RSS2JSON+encodeURIComponent(source.url)+'&count=4';
+    const res=await fetch(url,{signal:AbortSignal.timeout(8000)});
+    const data=await res.json();
+    if(data.status!=='ok'||!data.items)return[];
+    return data.items.map((item,i)=>{
+      const id='rss-'+slugify(item.title||'')+'-'+i;
+      const cat=detectCategory(item.title,item.description);
+      const poll=(POLL_BANK[cat]||POLL_BANK.default)[0];
+      ensurePollCounts(id,poll.opts);
+      return{id,title:stripHtml(item.title),summary:stripHtml(item.description).slice(0,240)+'…',link:item.link,image:item.enclosure?.link||item.thumbnail||null,pubDate:item.pubDate,source:source.name,bias:source.bias,biasLabel:source.biasLabel,category:cat,poll,time:timeAgo(item.pubDate)};
     });
-  } catch(e) { return []; }
+  }catch(e){return[];}
 }
 
-async function loadNews() {
-  const results = await Promise.all(SOURCES.map(fetchSource));
-  const liveFeed = results.flat().filter(s=>s.title);
-  liveFeed.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
-  const liveNote = document.getElementById('live-note');
-  liveNote.style.display = 'block';
-  if (liveFeed.length > 0) {
-    allStories = [...liveFeed, ...CURATED];
-    liveNote.textContent = `✓ Showing ${liveFeed.length} live stories from ABC, Guardian, Sky News and SBS — plus ${CURATED.length} curated stories below.`;
-  } else {
-    allStories = CURATED;
-    liveNote.textContent = `Showing ${CURATED.length} curated Australian political stories. Live RSS feeds will load automatically when available.`;
-  }
-  renderFeed(); renderSentiment();
+async function loadNews(){
+  const results=await Promise.all(SOURCES.map(fetchSource));
+  const live=results.flat().filter(s=>s.title);
+  live.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  const note=document.getElementById('live-note');
+  note.style.display='block';
+  if(live.length>0){allStories=[...live,...CURATED];note.textContent=`✓ Showing ${live.length} live stories from ABC, Guardian, Sky News and SBS — plus ${CURATED.length} curated stories below.`;}
+  else{allStories=CURATED;note.textContent=`Showing ${CURATED.length} curated Australian political stories. Live RSS feeds will load automatically when available.`;}
+  renderFeed();renderSentiment();
 }
 
-function renderCard(s) {
-  const voted = pollVotes[s.id];
-  const counts = pollCounts[s.id] || s.poll.opts.map(()=>500);
-  const total = counts.reduce((a,b)=>a+b,0);
-  const maxCount = Math.max(...counts);
-  const isVoted = voted !== undefined;
-  const opts = s.poll.opts.map((opt,i) => {
-    const pct = Math.round(counts[i]/total*100);
-    const isSel = voted===i, isWin = counts[i]===maxCount && isVoted;
-    return `<div class="poll-option${isSel?' selected':''}${isWin?' winner-opt':''}${isVoted?' voted-state':''}" onclick="castVote('${s.id}',${i})">
-      <div class="poll-bar-bg" style="width:${isVoted?pct:0}%"></div>
-      <div class="poll-option-row">
-        <span class="poll-opt-text">${isSel?'<span class="poll-opt-check">✓</span>':''}${opt}</span>
-        <span class="poll-opt-pct">${isVoted?pct+'%':''}</span>
-      </div>
-    </div>`;
+function renderCard(s){
+  const voted=pollVotes[s.id];
+  const counts=pollCounts[s.id]||s.poll.opts.map(()=>500);
+  const total=counts.reduce((a,b)=>a+b,0);
+  const maxCount=Math.max(...counts);
+  const isVoted=voted!==undefined;
+  const imgSrc=getImg(s);
+  const fallback=CAT_IMG[s.category]||CAT_IMG.default;
+  const opts=s.poll.opts.map((opt,i)=>{
+    const pct=Math.round(counts[i]/total*100);
+    const isSel=voted===i,isWin=counts[i]===maxCount&&isVoted;
+    return`<div class="poll-option${isSel?' selected':''}${isWin?' winner-opt':''}${isVoted?' voted-state':''}" onclick="castVote('${s.id}',${i})"><div class="poll-bar-bg" style="width:${isVoted?pct:0}%"></div><div class="poll-option-row"><span class="poll-opt-text">${isSel?'<span class="poll-opt-check">✓</span>':''}${opt}</span><span class="poll-opt-pct">${isVoted?pct+'%':''}</span></div></div>`;
   }).join('');
-  const imgHtml = s.image ? `<img class="card-image" src="${s.image}" alt="" onerror="this.style.display='none'" loading="lazy">` : `<div class="card-image-placeholder">📰</div>`;
-  return `<article class="news-card" data-category="${s.category}">
-    ${imgHtml}
-    <div class="card-body">
-      <div class="card-meta">
-        <span class="source-name">${s.source}</span>
-        <span class="bias-pill bias-${s.bias}">${s.biasLabel}</span>
-        <span class="cat-pill">${s.category}</span>
-        <span class="card-time">${s.time||timeAgo(s.pubDate)||''}</span>
+  return`<article class="news-card" data-category="${s.category}">
+    <div class="card-img-wrap">
+      <img src="${imgSrc}" alt="${s.title.replace(/"/g,'')}" loading="lazy" onerror="this.src='${fallback}'">
+      <div class="card-img-overlay">
+        <div class="card-img-meta">
+          <span class="source-name">${s.source}</span>
+          <span class="bias-pill bias-${s.bias}">${s.biasLabel}</span>
+          <span class="cat-pill">${s.category}</span>
+          <span class="card-time">${s.time||timeAgo(s.pubDate)||''}</span>
+        </div>
+        <h2 class="card-img-title"><a href="${s.link}" target="_blank" rel="noopener">${s.title}</a></h2>
       </div>
-      <h2 class="card-headline"><a href="${s.link}" target="_blank" rel="noopener">${s.title}</a></h2>
+    </div>
+    <div class="card-body">
       <p class="card-summary">${s.summary}</p>
       ${s.link&&s.link!=='#'?`<a class="read-more" href="${s.link}" target="_blank" rel="noopener">Read full story →</a>`:''}
       <hr class="poll-divider">
@@ -478,83 +404,49 @@ function renderCard(s) {
   </article>`;
 }
 
-function renderFeed() {
-  const stories = currentFilter==='all' ? allStories : allStories.filter(s=>s.category===currentFilter);
-  document.getElementById('story-count').textContent = stories.length + ' stories';
-  const feed = document.getElementById('news-feed');
-  feed.innerHTML = stories.length === 0
-    ? `<div class="loading-card"><div style="font-size:14px;color:var(--text-muted);">No stories found for this topic right now.</div></div>`
-    : stories.map(renderCard).join('');
+function renderFeed(){
+  const stories=currentFilter==='all'?allStories:allStories.filter(s=>s.category===currentFilter);
+  document.getElementById('story-count').textContent=stories.length+' stories';
+  const feed=document.getElementById('news-feed');
+  feed.innerHTML=stories.length===0?`<div class="loading-card"><div style="font-size:14px;color:var(--text-muted)">No stories found for this topic.</div></div>`:stories.map(renderCard).join('');
 }
 
-function renderSentiment() {
-  document.getElementById('sentiment-display').innerHTML = SENTIMENT_TOPICS.map(t => {
-    const stories = allStories.filter(s=>s.category===t.key);
-    let pct = 42;
-    if (stories.length > 0) {
-      const totals = stories.map(s => { const c=pollCounts[s.id]||[500,500,300]; return Math.round(c[t.pos]/c.reduce((a,b)=>a+b,0)*100); });
-      pct = Math.round(totals.reduce((a,b)=>a+b,0)/totals.length);
-    }
-    const color = pct>55?'#16a34a':pct>35?'#d97706':'#dc2626';
-    return `<div class="sentiment-row"><span class="sentiment-lbl">${t.label}</span><div class="sent-bar-wrap"><div class="sent-bar" style="width:${pct}%;background:${color}"></div></div><span class="sent-pct">${pct}%</span></div>`;
+function renderSentiment(){
+  document.getElementById('sentiment-display').innerHTML=SENTIMENT_TOPICS.map(t=>{
+    const stories=allStories.filter(s=>s.category===t.key);
+    let pct=42;
+    if(stories.length>0){const totals=stories.map(s=>{const c=pollCounts[s.id]||[500,500,300];return Math.round(c[t.pos]/c.reduce((a,b)=>a+b,0)*100);});pct=Math.round(totals.reduce((a,b)=>a+b,0)/totals.length);}
+    const color=pct>55?'#16a34a':pct>35?'#d97706':'#dc2626';
+    return`<div class="sentiment-row"><span class="sentiment-lbl">${t.label}</span><div class="sent-bar-wrap"><div class="sent-bar" style="width:${pct}%;background:${color}"></div></div><span class="sent-pct">${pct}%</span></div>`;
   }).join('');
 }
 
-function renderTrending() {
-  document.getElementById('trending-polls').innerHTML = TRENDING.map((t,i) =>
-    `<div class="trending-item"><div class="trending-num">${i+1}</div><div><div class="trending-q">${t.q}</div><div class="trending-votes">${t.votes.toLocaleString()} votes</div></div></div>`
-  ).join('');
+function renderTrending(){
+  document.getElementById('trending-polls').innerHTML=TRENDING.map((t,i)=>`<div class="trending-item"><div class="trending-num">${i+1}</div><div><div class="trending-q">${t.q}</div><div class="trending-votes">${t.votes.toLocaleString()} votes</div></div></div>`).join('');
 }
 
-function castVote(storyId, optIdx) {
-  if (pollVotes[storyId] !== undefined) { showToast('You\'ve already voted on this poll'); return; }
-  if (!pollCounts[storyId]) pollCounts[storyId] = [500,400,300,200];
-  pollCounts[storyId][optIdx] += 1;
-  pollVotes[storyId] = optIdx;
-  localStorage.setItem('pulseAU_votes', JSON.stringify(pollVotes));
-  localStorage.setItem('pulseAU_counts', JSON.stringify(pollCounts));
+function castVote(storyId,optIdx){
+  if(pollVotes[storyId]!==undefined){showToast('You\'ve already voted on this poll');return;}
+  if(!pollCounts[storyId])pollCounts[storyId]=[500,400,300,200];
+  pollCounts[storyId][optIdx]+=1;pollVotes[storyId]=optIdx;
+  localStorage.setItem('pulseAU_votes',JSON.stringify(pollVotes));
+  localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));
   showToast('Vote recorded! Thanks for having your say.');
-  renderFeed(); renderSentiment();
+  renderFeed();renderSentiment();
 }
 
-function sharePoll() {
-  if (navigator.share) { navigator.share({title:'Vote on PulseAU',url:window.location.href}).catch(()=>{}); }
-  else { navigator.clipboard.writeText(window.location.href).then(()=>showToast('Link copied to clipboard')); }
+function sharePoll(){
+  if(navigator.share){navigator.share({title:'Vote on PulseAU',url:window.location.href}).catch(()=>{});}
+  else{navigator.clipboard.writeText(window.location.href).then(()=>showToast('Link copied to clipboard'));}
 }
 
-function setFilter(cat, btn) {
-  currentFilter = cat;
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderFeed();
-}
-
-function showModal(key) {
-  const m = MODALS[key]; if (!m) return;
-  document.getElementById('modal-title').textContent = m.title;
-  document.getElementById('modal-body').innerHTML = m.body;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
-
-function setBudgetCountdown() {
-  const budget = new Date('2026-05-12');
-  const days = Math.ceil((budget - new Date()) / 86400000);
-  document.getElementById('budget-days').textContent = days > 0 ? days : 0;
-}
-
-function setDate() {
-  document.getElementById('live-date').textContent = new Date().toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
-}
-
-setDate(); setBudgetCountdown(); renderTrending(); loadNews();
+function setFilter(cat,btn){currentFilter=cat;document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderFeed();}
+function showModal(key){const m=MODALS[key];if(!m)return;document.getElementById('modal-title').textContent=m.title;document.getElementById('modal-body').innerHTML=m.body;document.getElementById('modal-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function setBudgetCountdown(){const days=Math.ceil((new Date('2026-05-12')-new Date())/86400000);document.getElementById('budget-days').textContent=days>0?days:0;}
+function setDate(){document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+setDate();setBudgetCountdown();renderTrending();loadNews();
 </script>
 </body>
 </html>
