@@ -336,10 +336,14 @@ function stripHtml(h){return h?h.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').re
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function getImg(s){return s.image||CAT_IMG[s.category]||CAT_IMG.default;}
 
+function fetchWithTimeout(url,ms){
+  return Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
+}
+
 async function fetchSource(source){
   try{
     const url=RSS2JSON+encodeURIComponent(source.url)+'&count=4';
-    const res=await fetch(url,{signal:AbortSignal.timeout(8000)});
+    const res=await fetchWithTimeout(url,6000);
     const data=await res.json();
     if(data.status!=='ok'||!data.items)return[];
     return data.items.map((item,i)=>{
@@ -352,18 +356,34 @@ async function fetchSource(source){
   }catch(e){return[];}
 }
 
-async function loadNews(){
-  const results=await Promise.all(SOURCES.map(fetchSource));
-  const live=results.flat().filter(s=>s.title);
-  live.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
-  const note=document.getElementById('live-note');
-  note.style.display='block';
-  if(live.length>0){allStories=[...live,...CURATED];note.textContent=`✓ Showing ${live.length} live stories from ABC, Guardian, Sky News and SBS — plus ${CURATED.length} curated stories below.`;}
-  else{allStories=CURATED;note.textContent=`Showing ${CURATED.length} curated Australian political stories. Live RSS feeds will load automatically when available.`;}
-  renderFeed();renderSentiment();
+function loadNews(){
+  // Show curated stories immediately — no waiting
+  allStories = CURATED;
+  const note = document.getElementById('live-note');
+  note.style.display = 'block';
+  note.textContent = `Showing ${CURATED.length} curated Australian political stories. Checking live feeds…`;
+  renderFeed();
+  renderSentiment();
+
+  // Try to fetch live RSS in the background, update if successful
+  Promise.all(SOURCES.map(fetchSource)).then(results => {
+    const live = results.flat().filter(s => s.title);
+    live.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+    if(live.length > 0){
+      allStories = [...live, ...CURATED];
+      note.textContent = `✓ ${live.length} live stories loaded from ABC, Guardian, Sky News and SBS — plus ${CURATED.length} curated stories.`;
+      renderFeed();
+      renderSentiment();
+    } else {
+      note.textContent = `Showing ${CURATED.length} curated Australian political stories. Live feeds unavailable right now.`;
+    }
+  }).catch(() => {
+    note.textContent = `Showing ${CURATED.length} curated Australian political stories.`;
+  });
 }
 
 function renderCard(s){
+  if(!s.title) s.title = s.headline || '';
   const voted=pollVotes[s.id];
   const counts=pollCounts[s.id]||s.poll.opts.map(()=>500);
   const total=counts.reduce((a,b)=>a+b,0);
@@ -378,7 +398,7 @@ function renderCard(s){
   }).join('');
   return`<article class="news-card" data-category="${s.category}">
     <div class="card-img-wrap">
-      <img src="${imgSrc}" alt="${s.title.replace(/"/g,'')}" loading="lazy" onerror="this.src='${fallback}'">
+      <img src="${imgSrc}" alt=""/g,'')}" loading="lazy" onerror="this.src='${fallback}'">
       <div class="card-img-overlay">
         <div class="card-img-meta">
           <span class="source-name">${s.source}</span>
@@ -386,7 +406,7 @@ function renderCard(s){
           <span class="cat-pill">${s.category}</span>
           <span class="card-time">${s.time||timeAgo(s.pubDate)||''}</span>
         </div>
-        <h2 class="card-img-title"><a href="${s.link}" target="_blank" rel="noopener">${s.title}</a></h2>
+        <h2 class="card-img-title"><a href="${s.link}" target="_blank" rel="noopener">${s.title||s.headline}</a></h2>
       </div>
     </div>
     <div class="card-body">
