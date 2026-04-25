@@ -350,6 +350,15 @@ const POLL_BANK = {
   default:[{q:'Is this issue getting the attention it deserves?',opts:['Yes — right level of focus','Needs more focus',"It's being overhyped"]}],
 };
 
+const EVENTS = [
+  {date:'2026-05-02',label:'Nepean By-election',sub:'Mornington Peninsula, VIC',badge:'VIC State'},
+  {date:'2026-05-09',label:'Farrer By-election',sub:'Southwest NSW — 4-way race',badge:'NSW Federal'},
+  {date:'2026-05-12',label:'Federal Budget 2026',sub:'Treasurer Jim Chalmers',badge:'Federal'},
+  {date:'2026-07-01',label:'Stafford By-election',sub:'North Brisbane, QLD (TBC)',badge:'QLD State',tbc:true},
+  {date:'2026-11-28',label:'Victorian State Election',sub:'Full election — 88 seats',badge:'VIC State'},
+  {date:'2027-03-13',label:'NSW State Election',sub:'Full state election',badge:'NSW State'},
+];
+
 const TRENDING = [
   {q:'Should Australia become a republic?',votes:21840},
   {q:'Is the 2026 budget heading in the right direction?',votes:17302},
@@ -363,15 +372,6 @@ const SENTIMENT_TOPICS = [
   {label:'Energy future',key:'energy',pos:0},
   {label:'Budget mgmt',key:'economy',pos:0},
   {label:'Migration policy',key:'immigration',pos:1},
-];
-
-const EVENTS = [
-  {date:'2026-05-02',label:'Nepean By-election',sub:'Mornington Peninsula, VIC',badge:'VIC State'},
-  {date:'2026-05-09',label:'Farrer By-election',sub:'Southwest NSW — 4-way race',badge:'NSW Federal'},
-  {date:'2026-05-12',label:'Federal Budget 2026',sub:'Treasurer Jim Chalmers',badge:'Federal'},
-  {date:'2026-07-01',label:'Stafford By-election',sub:'North Brisbane, QLD (TBC)',badge:'QLD State',tbc:true},
-  {date:'2026-11-28',label:'Victorian State Election',sub:'Full election — 88 seats',badge:'VIC State'},
-  {date:'2027-03-13',label:'NSW State Election',sub:'Full state election',badge:'NSW State'},
 ];
 
 
@@ -537,7 +537,7 @@ function renderCard(s){
   }).join('');
   return '<article class="news-card" data-category="'+s.category+'">'+
     '<div class="card-img-wrap">'+
-    '<img src="'+imgSrc+'" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=420&fit=crop&q=80'">'+
+    '<img src="'+imgSrc+'" alt="" loading="lazy" onerror="this.onerror=null;this.src=CAT_IMG.default">'+
     '<span class="card-img-category">'+s.category+'</span>'+
     '<span class="card-img-source '+srcClass(s.bias)+'">'+s.source+'</span>'+
     '</div>'+
