@@ -66,24 +66,7 @@
     .event-sub{font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px}
     .event-badge{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);padding:2px 6px;border-radius:3px;margin-bottom:5px}
 
-    /* QUICK VOTE */
-    .quick-vote-card{background:var(--bg-card);border:2px solid var(--navy);border-radius:8px;padding:16px 18px;margin-bottom:20px}
-    .quick-vote-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:white;background:var(--navy);padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:10px}
-    .quick-vote-q{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.35}
-    .quick-vote-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    @media(max-width:500px){.quick-vote-opts{grid-template-columns:1fr}}
-    .qv-opt{position:relative;border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .15s;user-select:none}
-    .qv-opt:hover:not(.qv-voted){border-color:var(--navy)}
-    .qv-opt.qv-selected{border-color:var(--navy);border-width:2px}
-    .qv-opt.qv-winner{border-color:var(--gold)}
-    .qv-bar{position:absolute;top:0;left:0;height:100%;background:#f0ece4;transition:width .5s;z-index:0}
-    .qv-opt.qv-winner .qv-bar{background:#fef3c7}
-    .qv-opt.qv-selected .qv-bar{background:#e8eef8}
-    .qv-row{position:relative;z-index:1;padding:9px 12px;display:flex;justify-content:space-between;align-items:center}
-    .qv-text{font-size:13px;color:var(--text)}
-    .qv-check{font-size:11px;color:var(--navy);font-weight:600;margin-right:3px}
-    .qv-pct{font-size:12px;font-weight:600;color:var(--text-muted)}
-    .quick-vote-footer{font-size:11px;color:var(--text-light);margin-top:10px}
+
 
     /* LOADING */
     .loading-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:40px;text-align:center}
@@ -241,13 +224,6 @@
       <div class="events-fade-right"></div>
     </div>
 
-    <div class="quick-vote-card">
-      <div class="quick-vote-label">Quick vote</div>
-      <div class="quick-vote-q" id="qv-question"></div>
-      <div class="quick-vote-opts" id="qv-opts"></div>
-      <div class="quick-vote-footer"><span id="qv-total"></span></div>
-    </div>
-
     <div class="section-head">
       <div class="section-title">Today's Stories</div>
       <div style="display:flex;align-items:center;gap:12px;">
@@ -398,17 +374,12 @@ const EVENTS = [
   {date:'2027-03-13',label:'NSW State Election',sub:'Full state election',badge:'NSW State'},
 ];
 
-const QUICK_VOTE = {
-  id:'qv_cl',
-  q:"Who is best placed to manage Australia's cost-of-living crisis?",
-  opts:['Labor — stay the course','Coalition — time for change','Greens — tax the wealthy','None of them'],
-};
 
 const TODAY = new Date().toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'});
 const MODALS = {
   about:{title:'About PulseAU',body:`<h3>What is PulseAU?</h3><p>PulseAU is an independent Australian political news aggregator combined with a community polling platform. Our mission is to give everyday Australians a place to read political news from across the media spectrum — and to have their say on the issues that matter.</p><h3>Who runs it?</h3><p>PulseAU is an independent project based in Brisbane, Australia. We have no affiliation with any political party, government body, or media organisation.</p><h3>How does the news feed work?</h3><p>We aggregate publicly available RSS feeds from Australian news sources including ABC News, The Guardian Australia, Sky News and SBS News. We display headlines, short summaries, and links back to the original articles. We do not reproduce full article text.</p><h3>Contact us</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
   tos:{title:'Terms of Use',body:`<p><em>Last updated: ${TODAY}</em></p><h3>1. Acceptance of terms</h3><p>By accessing PulseAU you agree to these Terms of Use.</p><h3>2. Third-party content</h3><p>News headlines and summaries are sourced from publicly published RSS feeds. All original content belongs to the respective publishers. Use of headlines and short summaries is consistent with the <em>Copyright Act 1968</em> (Cth) and <em>Fairfax Media Publications Pty Ltd v Reed International Books Australia Pty Ltd</em> [2010] FCA 984.</p><h3>3. Community polls</h3><p>Polls are informal, non-scientific, and for general interest only. Results should not be cited as representative public opinion data.</p><h3>4. No political endorsement</h3><p>PulseAU is politically independent and does not endorse any political party, candidate, or policy position.</p><h3>5. Governing law</h3><p>These terms are governed by the laws of Queensland, Australia.</p><h3>6. Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
-  privacy:{title:'Privacy Policy',body:`<p><em>Last updated: ${TODAY}</em></p><h3>What data we collect</h3><ul><li><strong>Poll votes:</strong> Stored locally in your browser (localStorage). Not transmitted to any server.</li><li><strong>Server logs:</strong> Netlify logs basic access information for security purposes only.</li></ul><h3>What we do not collect</h3><ul><li>No registration or account creation required</li><li>No names, emails, or personal details collected</li><li>No advertising tracking cookies</li><li>No data sold or shared with third parties</li></ul><h3>Third-party services</h3><ul><li>allorigins.win — CORS proxy to fetch RSS feeds</li><li>Google Fonts — loads website fonts</li><li>Unsplash — provides article images under the Unsplash licence</li><li>Netlify — hosting provider</li></ul><h3>Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
+  privacy:{title:'Privacy Policy',body:`<p><em>Last updated: ${TODAY}</em></p><h3>What data we collect</h3><ul><li><strong>Poll votes:</strong> Stored locally in your browser (localStorage). Not transmitted to any server.</li><li><strong>Server logs:</strong> Netlify logs basic access information for security purposes only.</li></ul><h3>What we do not collect</h3><ul><li>No registration or account creation required</li><li>No names, emails, or personal details collected</li><li>No advertising tracking cookies</li><li>No data sold or shared with third parties</li></ul><h3>Third-party services</h3><ul><li>allorigins.win — CORS proxy to fetch RSS feeds</li><li>images.weserv.nl — image proxy and CDN cache for publisher images</li><li>Google Fonts — loads website fonts</li><li>Unsplash — provides article images under the Unsplash licence</li><li>Netlify — hosting provider</li></ul><h3>Contact</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
   bias:{title:'Bias Methodology',body:`<h3>How we rate sources</h3><p>PulseAU applies indicative bias ratings to news sources based on their general editorial positioning.</p><h3>Our ratings</h3><ul><li><strong>Centre-left:</strong> The Guardian Australia, SMH, The Age, SBS</li><li><strong>Centre:</strong> ABC News, Reuters Australia</li><li><strong>Centre-right:</strong> Australian Financial Review</li><li><strong>Right:</strong> Sky News Australia, The Australian, Courier-Mail, Herald Sun</li></ul><h3>Important caveats</h3><p>Ratings are indicative and generalised. Individual articles may vary significantly. Bias does not mean inaccuracy.</p><h3>Feedback</h3><p><a href="mailto:hello@pulseau.net">hello@pulseau.net</a></p>`},
 };
 
@@ -419,7 +390,18 @@ let pollCounts = JSON.parse(localStorage.getItem('pulseAU_counts')||'{}');
 
 // ── HELPERS ──
 function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}
-function getImg(s){return s.image||CAT_IMG[s.category]||CAT_IMG.default}
+function proxyImg(url){
+  if(!url) return null;
+  // Don't proxy Unsplash — they're already a CDN
+  if(url.includes('unsplash.com')) return url;
+  // Route all publisher images through weserv.nl (free image proxy/cache)
+  // This caches the image, resizes it, and avoids hotlink blocking
+  return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=800&h=420&fit=cover&output=jpg&q=80';
+}
+function getImg(s){
+  const raw = s.image || CAT_IMG[s.category] || CAT_IMG.default;
+  return proxyImg(raw) || CAT_IMG.default;
+}
 function srcClass(bias){return bias==='left'?'src-left':bias==='right'?'src-right':'src-centre'}
 function detectCategory(t,d){
   const s=(t+' '+(d||'')).toLowerCase();
@@ -555,7 +537,7 @@ function renderCard(s){
   }).join('');
   return '<article class="news-card" data-category="'+s.category+'">'+
     '<div class="card-img-wrap">'+
-    '<img src="'+imgSrc+'" alt="" loading="lazy" onerror="this.src=\''+( CAT_IMG[s.category]||CAT_IMG.default)+'\'">'+
+    '<img src="'+imgSrc+'" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=420&fit=crop&q=80'">'+
     '<span class="card-img-category">'+s.category+'</span>'+
     '<span class="card-img-source '+srcClass(s.bias)+'">'+s.source+'</span>'+
     '</div>'+
@@ -615,25 +597,6 @@ function renderEvents(){
   }).join('');
 }
 
-// ── RENDER QUICK VOTE ──
-function renderQuickVote(){
-  const v=pollVotes[QUICK_VOTE.id];
-  if(!pollCounts[QUICK_VOTE.id])pollCounts[QUICK_VOTE.id]=[1840,1620,980,740];
-  const c=pollCounts[QUICK_VOTE.id];
-  const tot=c.reduce((a,b)=>a+b,0);
-  const mx=Math.max(...c);
-  const iv=v!==undefined;
-  document.getElementById('qv-question').textContent=QUICK_VOTE.q;
-  document.getElementById('qv-total').textContent=tot.toLocaleString()+' votes';
-  document.getElementById('qv-opts').innerHTML=QUICK_VOTE.opts.map((opt,i)=>{
-    const pct=Math.round(c[i]/tot*100);
-    const iS=v===i,iW=c[i]===mx&&iv;
-    return'<div class="qv-opt'+(iS?' qv-selected':'')+(iW?' qv-winner':'')+(iv?' qv-voted':'')+'" onclick="castQuickVote('+i+')">'+
-      '<div class="qv-bar" style="width:'+(iv?pct:0)+'%"></div>'+
-      '<div class="qv-row"><span class="qv-text">'+(iS?'<span class="qv-check">✓</span>':'')+opt+'</span>'+
-      '<span class="qv-pct">'+(iv?pct+'%':'')+'</span></div></div>';
-  }).join('');
-}
 
 // ── ACTIONS ──
 function castVote(id,idx){
@@ -644,13 +607,6 @@ function castVote(id,idx){
   localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));
   showToast('Vote recorded! Thanks for having your say.');
   renderFeed();renderSentiment();
-}
-function castQuickVote(i){
-  if(pollVotes[QUICK_VOTE.id]!==undefined){showToast('Already voted');return;}
-  pollCounts[QUICK_VOTE.id][i]+=1;pollVotes[QUICK_VOTE.id]=i;
-  localStorage.setItem('pulseAU_votes',JSON.stringify(pollVotes));
-  localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));
-  showToast('Vote recorded!');renderQuickVote();
 }
 function sharePoll(){
   if(navigator.share){navigator.share({title:'Vote on PulseAU',url:window.location.href}).catch(()=>{});}
@@ -676,7 +632,7 @@ function setDate(){
 }
 
 // ── INIT ──
-setDate();renderEvents();renderQuickVote();renderTrending();loadNews();
+setDate();renderEvents();renderTrending();loadNews();
 
 // Auto-refresh every 5 minutes (respectful of proxy services)
 setInterval(()=>{loadNews();renderEvents();},300000);
