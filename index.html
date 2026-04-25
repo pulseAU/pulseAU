@@ -456,20 +456,20 @@ function parseRSS(xml,source){
 }
 
 async function fetchSource(source){
-  // Primary: allorigins.win (no rate limits, no API key)
+  // Primary: codetabs.com proxy (tested working, ~800ms)
   try{
-    const proxyUrl='https://api.allorigins.win/get?url='+encodeURIComponent(source.url);
-    const res=await fetchWithTimeout(proxyUrl,8000);
-    const data=await res.json();
-    if(data&&data.contents){
-      const stories=parseRSS(data.contents,source);
+    const proxyUrl='https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(source.url);
+    const res=await fetchWithTimeout(proxyUrl,10000);
+    if(res.ok){
+      const xml=await res.text();
+      const stories=parseRSS(xml,source);
       if(stories.length>0)return stories;
     }
   }catch(e){}
-  // Fallback: corsproxy.io
+  // Fallback: allorigins raw endpoint
   try{
-    const proxy2='https://corsproxy.io/?'+encodeURIComponent(source.url);
-    const res2=await fetchWithTimeout(proxy2,8000);
+    const proxy2='https://api.allorigins.win/raw?url='+encodeURIComponent(source.url);
+    const res2=await fetchWithTimeout(proxy2,10000);
     const xml=await res2.text();
     const stories=parseRSS(xml,source);
     if(stories.length>0)return stories;
