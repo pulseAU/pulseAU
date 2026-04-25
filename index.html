@@ -179,6 +179,12 @@
     .news-card.hero-card .card-img-wrap{height:300px}
     .news-card.hero-card .card-headline{font-size:24px}
     .news-card.hero-card .card-summary{font-size:14px}
+  
+    /* ── REFRESH INDICATOR ── */
+    .refresh-indicator{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-light)}
+    .refresh-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--text-light);flex-shrink:0;transition:background 0.3s}
+    .refresh-dot.refreshing{background:#f59e0b;animation:blink 0.6s infinite}
+    .refresh-dot.fresh{background:#22c55e}
   </style>
 </head>
 <body>
@@ -227,7 +233,13 @@
     </div>
     <div class="section-head">
       <div class="section-title">Today's Stories</div>
-      <div class="section-count" id="story-count"></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="section-count" id="story-count"></div>
+        <div class="refresh-indicator" id="refresh-indicator">
+          <span class="refresh-dot" id="refresh-dot"></span>
+          <span id="refresh-label">Loading…</span>
+        </div>
+      </div>
     </div>
     <div class="live-news-note" id="live-note" style="display:none"></div>
     <div id="news-feed">
@@ -403,8 +415,27 @@ async function fetchSource(source){
   }catch(e){return[];}
 }
 
+function updateRefreshLabel(){
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('refresh-label').textContent = 'Updated ' + timeStr;
+  const dot = document.getElementById('refresh-dot');
+  dot.classList.remove('refreshing');
+  dot.classList.add('fresh');
+  // Fade back to neutral after 5s
+  setTimeout(()=>{ dot.classList.remove('fresh'); }, 5000);
+}
+
+function setRefreshing(){
+  const dot = document.getElementById('refresh-dot');
+  dot.classList.remove('fresh');
+  dot.classList.add('refreshing');
+  document.getElementById('refresh-label').textContent = 'Refreshing…';
+}
+
 function loadNews(){
   // Show curated stories immediately — no waiting
+  setRefreshing();
   allStories = CURATED;
   const note = document.getElementById('live-note');
   note.style.display = 'block';
@@ -419,10 +450,12 @@ function loadNews(){
     if(live.length > 0){
       allStories = [...live, ...CURATED];
       note.textContent = `✓ ${live.length} live stories loaded from ABC, Guardian, Sky News and SBS — plus ${CURATED.length} curated stories.`;
+      updateRefreshLabel();
       renderFeed();
       renderSentiment();
     } else {
       note.textContent = `Showing ${CURATED.length} curated Australian political stories. Live feeds unavailable right now.`;
+      updateRefreshLabel();
     }
   }).catch(() => {
     note.textContent = `Showing ${CURATED.length} curated Australian political stories.`;
@@ -530,6 +563,12 @@ function renderQuickVote(){const v=pollVotes[QUICK_VOTE.id];if(!pollCounts[QUICK
 function castQuickVote(i){if(pollVotes[QUICK_VOTE.id]!==undefined){showToast('Already voted');return;}pollCounts[QUICK_VOTE.id][i]+=1;pollVotes[QUICK_VOTE.id]=i;localStorage.setItem('pulseAU_votes',JSON.stringify(pollVotes));localStorage.setItem('pulseAU_counts',JSON.stringify(pollCounts));showToast('Vote recorded!');renderQuickVote();}
 function setDate(){document.getElementById('live-date').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
 setDate();renderEvents();renderQuickVote();renderTrending();loadNews();
+
+// Auto-refresh news every 60 seconds
+setInterval(() => {
+  loadNews();
+  renderEvents(); // keep countdown accurate
+}, 60000);
 </script>
 </body>
 </html>
