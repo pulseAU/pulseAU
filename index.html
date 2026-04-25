@@ -433,6 +433,33 @@ function fetchWithTimeout(url,ms){
   return Promise.race([fetch(url),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))]);
 }
 
+// Image cache stored in localStorage to avoid re-fetching
+const IMG_CACHE_KEY = 'pulseAU_imgCache';
+let imgCache = {};
+try { imgCache = JSON.parse(localStorage.getItem(IMG_CACHE_KEY)||'{}'); } catch(e) {}
+
+function saveImgCache(){
+  try { localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(imgCache)); } catch(e) {}
+}
+
+function extractRSSImage(item){
+  // 1. Enclosure tag
+  const enc = item.querySelector('enclosure');
+  if(enc?.getAttribute('url')) return enc.getAttribute('url');
+  // 2. media:content (Yahoo Media RSS — used by Guardian, SBS, Sky)
+  const mediaNS = 'http://search.yahoo.com/mrss/';
+  const mc = item.getElementsByTagNameNS(mediaNS,'content')[0];
+  if(mc?.getAttribute('url')) return mc.getAttribute('url');
+  // 3. media:thumbnail
+  const mt = item.getElementsByTagNameNS(mediaNS,'thumbnail')[0];
+  if(mt?.getAttribute('url')) return mt.getAttribute('url');
+  // 4. img tag inside description HTML
+  const desc = item.querySelector('description')?.textContent || '';
+  const imgMatch = desc.match(/src=["']([^"']+\.(?:jpg|jpeg|png|webp)[^"']{0,80})["']/i);
+  if(imgMatch) return imgMatch[1];
+  return null;
+}
+
 function parseRSS(xml,source){
   try{
     const doc=new DOMParser().parseFromString(xml,'text/xml');
@@ -444,8 +471,10 @@ function parseRSS(xml,source){
       const description=get('description');
       const link=get('link')||getAttr('link','href');
       const pubDate=get('pubDate');
-      const encUrl=getAttr('enclosure','url');
-      const image=encUrl||null;
+      // Try to get image from RSS feed first, then check cache
+      const rssImage = extractRSSImage(item);
+      const cachedImage = link ? imgCache[link] : null;
+      const image = rssImage || cachedImage || null;
       const id='rss-'+source.bias+'-'+i+'-'+Date.now();
       const cat=detectCategory(title,description);
       const poll=(POLL_BANK[cat]||POLL_BANK.default)[0];
@@ -453,6 +482,34 @@ function parseRSS(xml,source){
       return{id,title:stripHtml(title),summary:stripHtml(description).slice(0,240)+'…',link,image,pubDate,source:source.name,bias:source.bias,biasLabel:source.biasLabel,category:cat,poll,time:timeAgo(pubDate)};
     }).filter(s=>s.title);
   }catch(e){return[]}
+}
+
+// Fetch og:image for articles missing images, cache results
+async function enrichImages(stories){
+  const missing = stories.filter(s => !s.image && s.link && s.link !== '#' && !imgCache[s.link]);
+  if(missing.length === 0) return;
+  // Process up to 5 at a time to avoid overloading
+  const batch = missing.slice(0,5);
+  await Promise.allSettled(batch.map(async s => {
+    try{
+      const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(s.link);
+      const res = await fetchWithTimeout(proxyUrl, 8000);
+      const html = await res.text();
+      // Extract og:image
+      const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+                   || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+      if(ogMatch && ogMatch[1]){
+        imgCache[s.link] = ogMatch[1];
+        s.image = ogMatch[1]; // update in place
+      } else {
+        imgCache[s.link] = ''; // mark as checked, no image found
+      }
+    }catch(e){
+      imgCache[s.link] = '';
+    }
+  }));
+  saveImgCache();
+  renderFeed(); // re-render with newly found images
 }
 
 async function fetchSource(source){
@@ -512,6 +569,8 @@ function loadNews(){
       note.textContent='Showing '+CURATED.length+' curated Australian political stories. Live feeds updating shortly.';
     }
     renderFeed();renderSentiment();updateRefreshLabel();
+    // Fetch og:images for live articles missing images (cached in localStorage)
+    enrichImages(allStories.filter(s=>s.id.startsWith('rss-')));
   }).catch(()=>{
     note.textContent='Showing '+CURATED.length+' curated Australian political stories.';
     updateRefreshLabel();
